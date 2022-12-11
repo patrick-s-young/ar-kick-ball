@@ -1,0 +1,28 @@
+{
+  "name": "web-ar-boilerplate",
+  "version": "1.0.0",
+  "description": "Web AR project template using webpack, three.js and cannon-es",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "start": "webpack serve --open --https",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "Patrick S. Young",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "lodash": "^4.17.21",
+    "three": "^0.145.0"
+  }
+}
