@@ -6,6 +6,7 @@ export function XRManager({
 }) {
 
   let xrSession;
+  let onSelectCallback;
 
   if ('xr' in window.navigator) {
     console.log('xr detected')
@@ -33,6 +34,7 @@ export function XRManager({
 
   const onSessionStart = async (session) => {
     xrSession = session;
+    xrSession.addEventListener('select', onSelect);
     startButton.setVisible(false);
     onReady();
   }
@@ -41,8 +43,15 @@ export function XRManager({
     console.log('onSessionEnd')
   }
 
+  const onSelect = (ev) => {
+    console.log('onSelect ev:', ev)
+    if (onSelectCallback !== undefined) onSelectCallback(ev);
+  }
+
   return {
     get obj() { return xrSession },
-    get xrSession() { return xrSession}
+    get xrSession() { return xrSession},
+    get inputSources() { return xrSession.inputSources},
+    setOnSelectCallback: (f) => { onSelectCallback = f}
   }
 }

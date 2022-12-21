@@ -8,8 +8,10 @@ export function Renderer() {
   renderer.xr.enabled = true;
 
   return {
+    setReferenceSpaceType: renderer.xr.setReferenceSpaceType,
+    setSession: (session) => renderer.xr.setSession(session),
     setAnimationLoop: renderer.setAnimationLoop,
-    render: () => renderer.render(scene, camera),
-    get obj() { return renderer }
+    render: (scene, camera) => renderer.render(scene, camera),
+    get obj() { return renderer },
   }
 }

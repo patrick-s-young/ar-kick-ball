@@ -10,8 +10,6 @@ import { HitTestManager } from './components/HitTestManager';
 import './style.css';
 
 export const App = () => {
-
-
   const scene = Scene();
   const camera = Camera();
   const lights = Lights();
@@ -19,16 +17,27 @@ export const App = () => {
   const reticle = Reticle();
   scene.addToScene(reticle.getMesh());
   const renderer = Renderer();
-  let hitTestManager;
   const arButton = ARButton();
   const xrManager = XRManager({ startButton: arButton, onReady }) 
   const clock = new THREE.Clock();
+  let hitTestManager;
+
 
   async function onReady () {
     hitTestManager = HitTestManager({ xrSession: xrManager.xrSession });
-    renderer.obj.xr.setReferenceSpaceType( 'local' );
-    renderer.obj.xr.setSession( xrManager.xrSession  );
-    renderer.obj.setAnimationLoop(animationLoopCallback);
+    xrManager.setOnSelectCallback(onSelectCallback)
+    renderer.setReferenceSpaceType( 'local' );
+    renderer.setSession( xrManager.xrSession  );
+    renderer.setAnimationLoop(animationLoopCallback);
+  }
+
+
+  const onSelectCallback = (ev) => {
+    if (reticle.visible) {
+      const workingPositionVec3 = new THREE.Vector3();
+      workingPositionVec3.setFromMatrixPosition(reticle.matrix);
+      scene.addBox({ positionVec3: workingPositionVec3 })
+    }
   }
 
   function animationLoopCallback(timestamp, frame) {
@@ -46,14 +55,10 @@ export const App = () => {
       }
     }
     reticle.updateMixer(dt);
-    renderer.obj.render(scene.obj, camera.obj);
+    renderer.render(scene.obj, camera.obj);
   }
 
-
-
-  return {
-    result: {}
-  }
+  return null;
 }
 
 

@@ -1,13 +1,11 @@
 
 
 export const HitTestManager = ({ xrSession }) => {
-
   let hitTestSource = null;
   let hitTestSourceRequested = false;
   let localFloorReferenceSpace;
 
   xrSession.requestReferenceSpace('local').then(result => localFloorReferenceSpace = result);
-
 
   const requestHitTestSource = () => {
     xrSession.requestReferenceSpace('viewer')
