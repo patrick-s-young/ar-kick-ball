@@ -6,23 +6,31 @@ import { Camera } from './components/Camera';
 import { Lights } from './components/Lights';
 import { Renderer } from './components/Renderer';
 import { Reticle } from './components/Reticle';
+import { Robot } from './components/Robot';
 import { HitTestManager } from './components/HitTestManager';
 import './style.css';
 
 export const App = () => {
+  // SCENE SETUP
   const scene = Scene();
   const camera = Camera();
   const lights = Lights();
-  scene.addToScene(lights.getLights())
+  scene.addToScene(lights.getLights());
+  // RENDERER
+  const renderer = Renderer();
+  const clock = new THREE.Clock();
+  // XR SESSION
   const reticle = Reticle();
   scene.addToScene(reticle.getMesh());
-  const renderer = Renderer();
   const arButton = ARButton();
   const xrManager = XRManager({ startButton: arButton, onReady }) 
-  const clock = new THREE.Clock();
   let hitTestManager;
+  // ROBOT
+  const robot = Robot();
+  scene.addToScene(robot.getMesh());
 
 
+  // XR SESSION READY
   async function onReady () {
     hitTestManager = HitTestManager({ xrSession: xrManager.xrSession });
     xrManager.setOnSelectCallback(onSelectCallback)
@@ -31,19 +39,21 @@ export const App = () => {
     renderer.setAnimationLoop(animationLoopCallback);
   }
 
-
+  // ON SCREEN TAP
   const onSelectCallback = (ev) => {
     if (reticle.visible) {
       const workingPositionVec3 = new THREE.Vector3();
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
-      scene.addBox({ positionVec3: workingPositionVec3 })
+      //scene.addBox({ positionVec3: workingPositionVec3 });
+      robot.visible = true;
+      robot.setMatrixFromArray(workingPositionVec3)
     }
   }
 
+  // RENDER LOOP
   function animationLoopCallback(timestamp, frame) {
     const dt = clock.getDelta();
     let hitPoseTransformMatrix = [];
-
     if ( frame ) {
       if ( hitTestManager.hitTestSourceRequested === false ) hitTestManager.requestHitTestSource();
       hitPoseTransformMatrix = hitTestManager.hitTestSource ? hitTestManager.getHitTestResults(frame) : [];
@@ -55,6 +65,7 @@ export const App = () => {
       }
     }
     reticle.updateMixer(dt);
+    robot.updateMixer(dt);
     renderer.render(scene.obj, camera.obj);
   }
 
