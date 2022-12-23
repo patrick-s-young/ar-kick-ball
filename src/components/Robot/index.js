@@ -2,25 +2,28 @@ import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 
-export function reticleFactory() {
+export function Robot() {
   const mesh = new THREE.Group();
-  mesh.name = 'reticle';
-  mesh.matrixAutoUpdate = false;
+  mesh.name = 'robot';
+  mesh.matrixAutoUpdate = true;
   mesh.visible = false;
   const gltfLoader = new GLTFLoader();
   const anim = {};
 
-  gltfLoader.load('/models/reticle_spin.glb', (gltf) => {
+  gltfLoader.load('/models/xbot.glb', (gltf) => {
+    gltf.scene.scale.set(.25, .25, .25);
     mesh.add(gltf.scene);
     anim.mixer = new THREE.AnimationMixer(gltf.scene);
     anim.clips = gltf.animations;
-    anim.clip = THREE.AnimationClip.findByName(anim.clips, 'Spin');
+    anim.clip = THREE.AnimationClip.findByName(anim.clips, 'idle');
+
     anim.action = anim.mixer.clipAction(anim.clip);
     anim.action.play();
   });
 
   const setMatrixFromArray = (matrixArray) => {
-    mesh.matrix.fromArray(matrixArray);
+    mesh.position.set(...matrixArray);
+    //mesh.matrix.fromArray(matrixArray);
   }
 
   const updateMixer = (deltaSeconds) => {
@@ -28,7 +31,7 @@ export function reticleFactory() {
   }
 
   return {
-    get mesh() { return mesh },
+    getMesh: () => { return mesh },
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
@@ -37,4 +40,3 @@ export function reticleFactory() {
     setMatrixFromArray
   }
 }
-
