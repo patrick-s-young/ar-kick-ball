@@ -8,18 +8,28 @@ export function Robot() {
   mesh.matrixAutoUpdate = true;
   mesh.visible = false;
   const gltfLoader = new GLTFLoader();
-  const anim = {};
+  let animationMixer;
+  let animations;
+  let animationClip;
+  let currentClipAction;
 
-  gltfLoader.load('/models/xbot.glb', (gltf) => {
+
+  gltfLoader.load('/models/twistBot.glb', (gltf) => {
     gltf.scene.scale.set(.25, .25, .25);
     mesh.add(gltf.scene);
-    anim.mixer = new THREE.AnimationMixer(gltf.scene);
-    anim.clips = gltf.animations;
-    anim.clip = THREE.AnimationClip.findByName(anim.clips, 'idle');
-
-    anim.action = anim.mixer.clipAction(anim.clip);
-    anim.action.play();
+    animationMixer = new THREE.AnimationMixer(gltf.scene);
+    animations = gltf.animations;
+    console.log('animations', animations)
+    animationClip = THREE.AnimationClip.findByName(animations, 'twist');
+    currentClipAction = animationMixer.clipAction(animationClip);
+    currentClipAction.play();
   });
+
+  // const updateClipAction = () => {
+  //   const animClip = THREE.AnimationClip.findByName(animations, 'twistDance');
+  //   const clipAction = animationMixer.clipAction(animClip);
+  //   currentClipAction.crossFadeTo(clipAction, 0.5);
+  // }
 
   const setMatrixFromArray = (matrixArray) => {
     mesh.position.set(...matrixArray);
@@ -27,7 +37,7 @@ export function Robot() {
   }
 
   const updateMixer = (deltaSeconds) => {
-    if (mesh.visible) anim.mixer?.update(deltaSeconds);
+    if (mesh.visible) animationMixer?.update(deltaSeconds);
   }
 
   return {
@@ -35,7 +45,6 @@ export function Robot() {
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
-    get anim() { return anim },
     updateMixer,
     setMatrixFromArray
   }
