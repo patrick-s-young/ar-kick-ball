@@ -5,10 +5,11 @@ export const ActionMenu = ({
   setClipAction }) => {
 
   const flexContainer = document.createElement('div');
+    flexContainer.style.position = 'absolute';
   flexContainer.style.display = 'flex';
   flexContainer.style.justifyContent = 'space-around';
   flexContainer.style.width = '100vw';
-  flexContainer.style.marginTop = '20vh';
+  flexContainer.style.marginTop = '5vh';
   menuParent.appendChild(flexContainer);
 
 

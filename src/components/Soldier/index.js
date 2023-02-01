@@ -75,8 +75,6 @@ export function Soldier(onLoadCallback) {
   function setDirection (newDirection) {
     targetRadians = DIRECTION[newDirection];
     yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
-    // xDirection= Math.sin(-targetRadians);
-    // zDirection = Math.cos(targetRadians);
   }
   // SET POSITION TO HIT TEST RESULTS
   const setMatrixFromArray = (matrixArray) => {
@@ -93,7 +91,7 @@ export function Soldier(onLoadCallback) {
       animationMixer?.update(deltaSeconds);
   }
   const updateRotation = () => {
-    mesh.quaternion.rotateTowards(yRotateQuaternion, .025);
+    mesh.quaternion.rotateTowards(yRotateQuaternion, .05);
     const [x, yNow, z, w] = mesh.quaternion.toArray();
     if (yNow !== yPrev) {
       const angle = 2 * Math.acos(w);

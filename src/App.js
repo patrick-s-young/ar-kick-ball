@@ -17,6 +17,7 @@ export const App = () => {
   // PARENT OF ACTION AND DIRECTION BUTTONS
   const menuParent = document.createElement('div');
   menuParent.style.position = 'absolute';
+  menuParent.style.visibility = 'hidden';
   document.body.appendChild(menuParent);
 
   // SCENE SETUP
@@ -72,6 +73,7 @@ export const App = () => {
       soldier.setMatrixFromArray(workingPositionVec3);
       hitTestActive = false;
       reticle.visible = false;
+      menuParent.style.visibility = 'visible';
     }
   }
 
