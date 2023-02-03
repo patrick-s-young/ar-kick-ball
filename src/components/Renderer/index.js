@@ -13,5 +13,7 @@ export function Renderer() {
     setAnimationLoop: renderer.setAnimationLoop,
     render: (scene, camera) => renderer.render(scene, camera),
     get obj() { return renderer },
+    getCamera: renderer.xr.getCamera,
+    getReferenceSpace: renderer.xr.getReferenceSpace
   }
 }

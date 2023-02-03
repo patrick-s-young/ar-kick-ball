@@ -1,8 +1,9 @@
-import { NaiveBroadphase } from "cannon-es";
+
 
 export const DirectionMenu = ({ 
   menuParent, 
-  setDirection }) => {
+  setDirection,
+  camera }) => {
 
   const flexContainer = document.createElement('div');
   flexContainer.style.display = 'inline';
@@ -34,7 +35,27 @@ export const DirectionMenu = ({
   }
 
   function onClick ({ label }) {
-    setDirection(label);
+    const [x, yNow, z, w] = camera.obj.quaternion.toArray();
+
+    // if (yNow !== yPrev) {
+       const angle = 2 * Math.acos(w);
+       let s;
+       if (1 - w * w < 0.000001) {
+         s = 1;
+       } else {
+         s = Math.sqrt(1 - w * w);
+       }
+       //const result = { axis: new THREE.Vector3(x/s, yNow/s, z/s), angle }
+       const cameraYradians = yNow/s * angle;
+       const yAngle = { 
+          TOP: cameraYradians,
+          RIGHT: cameraYradians - Math.PI/2,
+          BOTTOM: cameraYradians + Math.PI,
+          LEFT: cameraYradians + Math.PI/2
+       }
+
+       console.log('new Direction', yAngle[label] )
+    setDirection(yAngle[label] );
   }
 
 

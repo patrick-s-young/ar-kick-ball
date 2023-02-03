@@ -5,7 +5,7 @@ export const ActionMenu = ({
   setClipAction }) => {
 
   const flexContainer = document.createElement('div');
-    flexContainer.style.position = 'absolute';
+  flexContainer.style.position = 'absolute';
   flexContainer.style.display = 'flex';
   flexContainer.style.justifyContent = 'space-around';
   flexContainer.style.width = '100vw';

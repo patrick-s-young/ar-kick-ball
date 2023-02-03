@@ -20,6 +20,18 @@ export const App = () => {
   menuParent.style.visibility = 'hidden';
   document.body.appendChild(menuParent);
 
+  // let debugText = 'default';
+
+  // const debugDisplay = document.createElement('div');
+  // debugDisplay.style.position = 'absolute';
+  // debugDisplay.style.width = '100vw';
+  // debugDisplay.style.height = '60px';
+  // debugDisplay.style.marginTop = '20px'
+  // debugDisplay.style.backgroundColor = 'lightgray';
+  // debugDisplay.innerHTML = debugText;
+
+  //document.body.appendChild(debugDisplay);
+
   // SCENE SETUP
   const scene = Scene();
   const camera = Camera();
@@ -36,9 +48,6 @@ export const App = () => {
   let hitTestManager;
 
   let hitTestActive = true;
-  // ROBOT
- // const robot = Robot();
- // scene.addToScene(robot.getMesh());
   // SOLDIER
   const soldier = Soldier(() => {
     const actionMenu = ActionMenu({ 
@@ -47,7 +56,8 @@ export const App = () => {
       setClipAction: soldier.setClipAction });
     const directionMenu = DirectionMenu({
       menuParent,
-      setDirection: soldier.setDirection
+      setDirection: soldier.setDirection,
+      camera
     })
   });
   scene.addToScene(soldier.mesh);
@@ -67,9 +77,6 @@ export const App = () => {
     if (reticle.visible) {
       const workingPositionVec3 = new THREE.Vector3();
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
-      //scene.addBox({ positionVec3: workingPositionVec3 });
-    //  robot.visible = true;
-     // robot.setMatrixFromArray(workingPositionVec3);
       soldier.setMatrixFromArray(workingPositionVec3);
       hitTestActive = false;
       reticle.visible = false;
@@ -92,7 +99,6 @@ export const App = () => {
         }
       }
       reticle.updateMixer(dt);
-  //  robot.updateMixer(dt);
     soldier.update(dt);
     renderer.render(scene.obj, camera.obj);
   }
