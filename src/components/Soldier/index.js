@@ -32,7 +32,7 @@ export function Soldier(onLoadCallback) {
   let xDirection;
   let zDirection;
   let speed = .028;
-  setDirection('TOP');
+  setDirection(0);
 
   gltfLoader.load('/models/Soldier.glb', (gltf) => {
     gltf.scene.scale.set(.125, .125, .125);
@@ -72,8 +72,8 @@ export function Soldier(onLoadCallback) {
     }
   }
   // SET DIRECTION
-  function setDirection (newDirection) {
-    targetRadians = DIRECTION[newDirection];
+  function setDirection (radians) {
+    targetRadians = radians; //DIRECTION[newDirection];
     yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
   }
   // SET POSITION TO HIT TEST RESULTS

@@ -48,6 +48,7 @@ export function XRManager({
     if (onSelectCallback !== undefined) onSelectCallback(ev);
   }
 
+
   return {
     get obj() { return xrSession },
     get xrSession() { return xrSession},
