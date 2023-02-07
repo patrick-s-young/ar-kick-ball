@@ -31,7 +31,6 @@ export function XRManager({
     }
   }
  
-
   const onSessionStart = async (session) => {
     xrSession = session;
     xrSession.addEventListener('select', onSelect);
@@ -44,15 +43,14 @@ export function XRManager({
   }
 
   const onSelect = (ev) => {
-    console.log('onSelect ev:', ev)
     if (onSelectCallback !== undefined) onSelectCallback(ev);
   }
-
 
   return {
     get obj() { return xrSession },
     get xrSession() { return xrSession},
     get inputSources() { return xrSession.inputSources},
-    setOnSelectCallback: (f) => { onSelectCallback = f}
+    setOnSelectCallback: (f) => { onSelectCallback = f},
+    disableOnSelect
   }
 }

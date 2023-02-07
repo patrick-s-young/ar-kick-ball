@@ -20,17 +20,6 @@ export const App = () => {
   menuParent.style.visibility = 'hidden';
   document.body.appendChild(menuParent);
 
-  // let debugText = 'default';
-
-  // const debugDisplay = document.createElement('div');
-  // debugDisplay.style.position = 'absolute';
-  // debugDisplay.style.width = '100vw';
-  // debugDisplay.style.height = '60px';
-  // debugDisplay.style.marginTop = '20px'
-  // debugDisplay.style.backgroundColor = 'lightgray';
-  // debugDisplay.innerHTML = debugText;
-
-  //document.body.appendChild(debugDisplay);
 
   // SCENE SETUP
   const scene = Scene();
@@ -48,15 +37,14 @@ export const App = () => {
   let hitTestManager;
 
   let hitTestActive = true;
+
+  let directionMenu;
   // SOLDIER
   const soldier = Soldier(() => {
-    const actionMenu = ActionMenu({ 
-      menuParent, 
-      clipActionsMap: soldier.clipActionsMap, 
-      setClipAction: soldier.setClipAction });
-    const directionMenu = DirectionMenu({
+    directionMenu = DirectionMenu({
       menuParent,
       setDirection: soldier.setDirection,
+      setClipAction: soldier.setClipAction,
       camera
     })
   });
@@ -69,6 +57,7 @@ export const App = () => {
     renderer.setReferenceSpaceType( 'local' );
     renderer.setSession( xrManager.xrSession  );
     renderer.setAnimationLoop(animationLoopCallback);
+
   }
 
   // ON SCREEN TAP
@@ -79,7 +68,8 @@ export const App = () => {
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
       soldier.setMatrixFromArray(workingPositionVec3);
       hitTestActive = false;
-      reticle.visible = false;
+      directionMenu.domElement.addEventListener('touchend', directionMenu.onStop);
+      reticle.visible = false; 
       menuParent.style.visibility = 'visible';
     }
   }

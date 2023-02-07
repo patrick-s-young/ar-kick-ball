@@ -101,7 +101,6 @@ export function Soldier(onLoadCallback) {
       } else {
         s = Math.sqrt(1 - w * w);
       }
-      //const result = { axis: new THREE.Vector3(x/s, yNow/s, z/s), angle }
       const yAngle = yNow/s * angle;
       xDirection= Math.sin(-yAngle);
       zDirection = Math.cos(yAngle);
