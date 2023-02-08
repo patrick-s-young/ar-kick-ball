@@ -1,48 +1,53 @@
 import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+// Configs
+import { CONFIGS } from './configs';
 
-const DIRECTION = { 
-  TOP: 0,
-  RIGHT: -Math.PI/2,
-  BOTTOM:  Math.PI,
-  LEFT: Math.PI/2
-}
 
 export function Soldier(onLoadCallback) {
   // LOADER
   const gltfLoader = new GLTFLoader();
-  // MESH
+  // MODEL
   const mesh = new THREE.Group();
-  mesh.name = 'soldier';
+  mesh.name = CONFIGS.name;
   mesh.matrixAutoUpdate = true;
-  mesh.visible = false;
+  mesh.visible = CONFIGS.defaultVisible;
   mesh.position.set(0, 0, 0);
+  const assetPath = CONFIGS.assetPath;
+  const meshScaler = CONFIGS.meshScaler;
+  const defaultClipAction = CONFIGS.defaultClipAction;
   // ANIMATION
   let animationMixer;
   let animationClips;
   let previousAction;
   let activeAction;
   const clipActionsMap = new Map();
-  // ROTATION
+  // DIRECTION
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
   const yRotateQuaternion = new THREE.Quaternion();
+  const turningIncrement = CONFIGS.turningIncrement;
   let yPrev;
-  // POSITION
   let targetRadians;
   let xDirection;
   let zDirection;
-  let speed = .028;
+  // SPEED
+  let speed = 0;
+  const walkingSpeed = CONFIGS.walkingSpeed;
+  const runningSpeed = CONFIGS.runningSpeed;
+  const speedScaler = CONFIGS.speedScaler;
+
+
   setDirection(0);
 
-  gltfLoader.load('/models/Soldier.glb', (gltf) => {
-    gltf.scene.scale.set(.125, .125, .125);
+  gltfLoader.load(assetPath, (gltf) => {
+    gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
     const model = gltf.scene;
     model.position.set(0, 0, 0);
     mesh.add(model);
     animationMixer = new THREE.AnimationMixer(model);
     animationClips = gltf.animations;
     animationClips.filter(ac => ac.name !== 'TPose').forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
-    setClipAction('Idle');
+    setClipAction(defaultClipAction);
     if (onLoadCallback !== undefined) onLoadCallback();
   });
 
@@ -66,14 +71,14 @@ export function Soldier(onLoadCallback) {
     if (clipActionName === 'Idle') {
       speed = 0;
     } else if (clipActionName === 'Walk') {
-      speed = .028 * 0.25;
+      speed = walkingSpeed * speedScaler;
     } else {
-      speed = .07 * 0.25;
+      speed = runningSpeed * speedScaler;
     }
   }
   // SET DIRECTION
   function setDirection (radians) {
-    targetRadians = radians; //DIRECTION[newDirection];
+    targetRadians = radians;
     yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
   }
   // SET POSITION TO HIT TEST RESULTS
@@ -91,7 +96,7 @@ export function Soldier(onLoadCallback) {
       animationMixer?.update(deltaSeconds);
   }
   const updateRotation = () => {
-    mesh.quaternion.rotateTowards(yRotateQuaternion, .05);
+    mesh.quaternion.rotateTowards(yRotateQuaternion, turningIncrement);
     const [x, yNow, z, w] = mesh.quaternion.toArray();
     if (yNow !== yPrev) {
       const angle = 2 * Math.acos(w);
@@ -108,7 +113,7 @@ export function Soldier(onLoadCallback) {
     }
   }
   const updatePosition = () => {
-    mesh.position.x += xDirection* speed;
+    mesh.position.x += xDirection * speed;
     mesh.position.z -= zDirection * speed;
   }
   const update = (deltaSeconds) => {
