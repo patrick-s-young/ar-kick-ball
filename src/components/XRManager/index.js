@@ -50,7 +50,6 @@ export function XRManager({
     get obj() { return xrSession },
     get xrSession() { return xrSession},
     get inputSources() { return xrSession.inputSources},
-    setOnSelectCallback: (f) => { onSelectCallback = f},
-    disableOnSelect
+    setOnSelectCallback: (f) => { onSelectCallback = f}
   }
 }

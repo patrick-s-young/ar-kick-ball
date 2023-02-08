@@ -1,54 +1,60 @@
 import * as THREE from 'three';
-import { ActionMenu } from './components/ActionMenu';
+// UI
 import { DirectionMenu } from './components/DirectionMenu';
-import { XRManager } from './components/XRManager';
 import { ARButton } from './UI/ARButton'
+// WebXR
+import { XRManager } from './components/XRManager';
+import { HitTestManager } from './components/HitTestManager';
+// Render
+import { Renderer } from './components/Renderer';
+// Scene
 import { Scene } from './components/Scene';
 import { Camera } from './components/Camera';
 import { Lights } from './components/Lights';
-import { Renderer } from './components/Renderer';
+// Models
 import { Reticle } from './components/Reticle';
-import { Robot } from './components/Robot';
 import { Soldier } from './components/Soldier';
-import { HitTestManager } from './components/HitTestManager';
+// Styles
 import './style.css';
 
+
+//////////////////
+// BEGIN COMPONENT
 export const App = () => {
-  // PARENT OF ACTION AND DIRECTION BUTTONS
-  const menuParent = document.createElement('div');
-  menuParent.style.position = 'absolute';
-  menuParent.style.visibility = 'hidden';
-  document.body.appendChild(menuParent);
-
-
   // SCENE SETUP
   const scene = Scene();
   const camera = Camera();
   const lights = Lights();
-  scene.addToScene(lights.getLights());
-  // RENDERER
-  const renderer = Renderer();
-  const clock = new THREE.Clock();
-  // XR SESSION
+  scene.add(lights.getLights());
+  // MODELS
   const reticle = Reticle();
-  scene.addToScene(reticle.getMesh());
+  scene.add(reticle.getMesh());
+  const soldier = Soldier(initDirectionMenu);
+  scene.add(soldier.mesh);
+  // UI
+  const menuParent = document.createElement('div');
+  menuParent.style.position = 'absolute';
+  menuParent.style.visibility = 'hidden';
+  document.body.appendChild(menuParent);
   const arButton = ARButton();
-  const xrManager = XRManager({ startButton: arButton, onReady }) 
-  let hitTestManager;
-
-  let hitTestActive = true;
-
   let directionMenu;
-  // SOLDIER
-  const soldier = Soldier(() => {
+  function initDirectionMenu() {
     directionMenu = DirectionMenu({
       menuParent,
       setDirection: soldier.setDirection,
       setClipAction: soldier.setClipAction,
       camera
-    })
-  });
-  scene.addToScene(soldier.mesh);
+    }) 
+  }
+  // RENDERER
+  const renderer = Renderer();
+  const clock = new THREE.Clock();
+  // XR MANAGER
+  const xrManager = XRManager({ startButton: arButton, onReady });
+  let hitTestManager;
+  let hitTestActive = true;
+ 
+
 
   // XR SESSION READY
   async function onReady () {
@@ -67,10 +73,12 @@ export const App = () => {
       const workingPositionVec3 = new THREE.Vector3();
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
       soldier.setMatrixFromArray(workingPositionVec3);
+      // disable hit test
       hitTestActive = false;
-      directionMenu.domElement.addEventListener('touchend', directionMenu.onStop);
       reticle.visible = false; 
+      // move to UI component
       menuParent.style.visibility = 'visible';
+      directionMenu.enableTouch();
     }
   }
 
@@ -88,7 +96,7 @@ export const App = () => {
           reticle.visible = false;
         }
       }
-      reticle.updateMixer(dt);
+    reticle.updateMixer(dt);
     soldier.update(dt);
     renderer.render(scene.obj, camera.obj);
   }

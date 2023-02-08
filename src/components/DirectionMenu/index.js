@@ -5,23 +5,29 @@ export const DirectionMenu = ({
   setDirection,
   setClipAction,
   camera }) => {
+  const { innerHeight, innerWidth } = window;
+  const containerHeight = `${innerWidth}px`;
+
+  const buttonSize = Math.trunc(innerWidth * .25);
+  const buttonWidthHeight = `${buttonSize}px`;
+  const buttonContainerMarginLeft = `${Math.trunc(buttonSize * .5)}px`;
+  const buttonContainerMarginTop = `${innerHeight - buttonSize * 2.9}px`;
+  const containerWidth = `${innerWidth - buttonSize}px`;
 
   const flexContainer = document.createElement('div');
   flexContainer.style.display = 'flex';
   flexContainer.style.position = 'relative';
-  flexContainer.style.marginLeft = '12vw';
-  flexContainer.style.marginTop = '6vw';
-  flexContainer.style.width = '75vw';
-  flexContainer.style.height = '75vw';
+  flexContainer.style.marginLeft = buttonContainerMarginLeft;
+  flexContainer.style.marginTop = buttonContainerMarginTop;
+  flexContainer.style.width = containerWidth;
+  flexContainer.style.height = containerHeight;
   menuParent.appendChild(flexContainer);
 
-  
-  //document.addEventListener('touchend', onStop);
 
   [
-    ['spacer', 'BOTTOM', 'spacer'],
-    ['LEFT', 'spacer', 'RIGHT'],
-    ['spacer', 'TOP', 'spacer']
+    ['spacer', 'LEFT', 'spacer'],
+    ['TOP', 'spacer', 'BOTTOM'],
+    ['spacer', 'RIGHT', 'spacer']
   ].forEach(item => flexContainer.appendChild(navRow(item)))
 
 
@@ -37,8 +43,8 @@ export const DirectionMenu = ({
   function navButton ({ label }) {
     const div = document.createElement('div');
     div.style.display = 'flex';
-    div.style.width = '25vw';
-    div.style.height = '25vw';
+    div.style.width = buttonWidthHeight;
+    div.style.height = buttonWidthHeight;
     div.style.borderRadius = '50%';
     div.style.backgroundColor = label === 'spacer' ? undefined : 'orange';
     //div.style.display = 'inline-block';
@@ -73,9 +79,13 @@ export const DirectionMenu = ({
     setClipAction('Idle');
   }
 
+  const enableTouch = () => {
+    flexContainer.addEventListener('touchend', onStop)
+  }
 
   return {
     onStop,
+    enableTouch,
     get domElement() { return flexContainer}
   }
 }
