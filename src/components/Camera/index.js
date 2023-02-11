@@ -6,6 +6,7 @@ export function Camera() {
   camera.position.set( 0, 1.6, 3 );
 
   return {
-    get obj() { return camera }
+    get self() { return camera },
+    get quaternion() { return camera.quaternion }
   }
 }

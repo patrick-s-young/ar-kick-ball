@@ -21,8 +21,6 @@ export const HitTestManager = ({ xrSession }) => {
      hitTestSourceRequested = true;
    }
 
-
-   
    const getHitTestResults = (frame) => {
      const hitTestResults = frame.getHitTestResults( hitTestSource );
      if ( hitTestResults.length ) {
@@ -33,8 +31,6 @@ export const HitTestManager = ({ xrSession }) => {
          return [];
      }
    }
-
-
 
   return {
     get hitTestSource() { return hitTestSource },

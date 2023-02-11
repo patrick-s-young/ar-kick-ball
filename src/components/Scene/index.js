@@ -16,7 +16,7 @@ export function Scene() {
 
 
   return {
-    get obj() { return scene },
+    get self() { return scene },
     add
   }
 }

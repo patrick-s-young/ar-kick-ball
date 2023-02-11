@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { CONFIGS } from './configs';
 
 
-export function Soldier(onLoadCallback) {
+export function Character(onLoadCallback) {
   // LOADER
   const gltfLoader = new GLTFLoader();
   // MODEL
