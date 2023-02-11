@@ -12,7 +12,7 @@ export function Renderer() {
     setSession: (session) => renderer.xr.setSession(session),
     setAnimationLoop: renderer.setAnimationLoop,
     render: (scene, camera) => renderer.render(scene, camera),
-    get obj() { return renderer },
+    get self() { return renderer },
     getCamera: renderer.xr.getCamera,
     getReferenceSpace: renderer.xr.getReferenceSpace
   }

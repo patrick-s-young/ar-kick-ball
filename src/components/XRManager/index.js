@@ -15,7 +15,7 @@ export function XRManager({
   }
 
   if ('xr' in window.navigator) {
-    startButton.obj.addEventListener('click', onClickArButton);
+    startButton.self.addEventListener('click', onClickArButton);
     navigator.xr.isSessionSupported('immersive-ar')
       .then(isSupported => startButton.disabled = !isSupported);
   }
@@ -47,7 +47,7 @@ export function XRManager({
   }
 
   return {
-    get obj() { return xrSession },
+    get self() { return xrSession },
     get xrSession() { return xrSession},
     get inputSources() { return xrSession.inputSources},
     setOnSelectCallback: (f) => { onSelectCallback = f}

@@ -11,7 +11,7 @@ export const ARButton = () => {
   const setVisible = (isVisible) => arButton.style.display = isVisible ? 'block' : 'none';
 
   return {
-    get obj() { return arButton },
+    get self() { return arButton },
     setVisible
   }
 }

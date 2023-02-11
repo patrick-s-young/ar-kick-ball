@@ -1,19 +1,20 @@
+// Three
 import * as THREE from 'three';
-// UI
-import { DirectionMenu } from './components/DirectionMenu';
-import { ARButton } from './UI/ARButton'
-// WebXR
-import { XRManager } from './components/XRManager';
-import { HitTestManager } from './components/HitTestManager';
-// Render
-import { Renderer } from './components/Renderer';
 // Scene
 import { Scene } from './components/Scene';
 import { Camera } from './components/Camera';
 import { Lights } from './components/Lights';
-// Models
+// GLTF
 import { Reticle } from './components/Reticle';
-import { Soldier } from './components/Soldier';
+import { Character } from './components/Character';
+// Renderer
+import { Renderer } from './components/Renderer';
+// WebXR
+import { XRManager } from './components/XRManager';
+import { HitTestManager } from './components/HitTestManager';
+// UI
+import { DirectionControls } from './components/DirectionControls';
+import { ARButton } from './components/ARButton'
 // Styles
 import './style.css';
 
@@ -26,21 +27,21 @@ export const App = () => {
   const camera = Camera();
   const lights = Lights();
   scene.add(lights.getLights());
-  // MODELS
+  // GLTF
   const reticle = Reticle();
   scene.add(reticle.getMesh());
-  const soldier = Soldier(initDirectionMenu);
+  const soldier = Character(initDirectionMenu);
   scene.add(soldier.mesh);
   // UI
-  const menuParent = document.createElement('div');
-  menuParent.style.position = 'absolute';
-  menuParent.style.visibility = 'hidden';
-  document.body.appendChild(menuParent);
+  const uiParent = document.createElement('div');
+  uiParent.style.position = 'absolute';
+  uiParent.style.visibility = 'hidden';
+  document.body.appendChild(uiParent);
   const arButton = ARButton();
-  let directionMenu;
+  let directionControls;
   function initDirectionMenu() {
-    directionMenu = DirectionMenu({
-      menuParent,
+    directionControls = DirectionControls({
+      uiParent,
       setDirection: soldier.setDirection,
       setClipAction: soldier.setClipAction,
       camera
@@ -63,7 +64,6 @@ export const App = () => {
     renderer.setReferenceSpaceType( 'local' );
     renderer.setSession( xrManager.xrSession  );
     renderer.setAnimationLoop(animationLoopCallback);
-
   }
 
   // ON SCREEN TAP
@@ -77,8 +77,8 @@ export const App = () => {
       hitTestActive = false;
       reticle.visible = false; 
       // move to UI component
-      menuParent.style.visibility = 'visible';
-      directionMenu.enableTouch();
+      uiParent.style.visibility = 'visible';
+      directionControls?.enableTouch();
     }
   }
 
@@ -98,7 +98,7 @@ export const App = () => {
       }
     reticle.updateMixer(dt);
     soldier.update(dt);
-    renderer.render(scene.obj, camera.obj);
+    renderer.render(scene.self, camera.self);
   }
 
   return null;
