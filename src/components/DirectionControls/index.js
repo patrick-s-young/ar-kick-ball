@@ -78,7 +78,6 @@ export const DirectionControls = ({
   }
 
   return {
-    onStop,
     enableTouch,
     get domElement() { return buttonContainer}
   }

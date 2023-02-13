@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+// Components
+import { Animation } from '../Animation';
 // Configs
 import { CONFIGS } from './configs';
 
@@ -17,11 +19,7 @@ export function Character(onLoadCallback) {
   const meshScaler = CONFIGS.meshScaler;
   const defaultClipAction = CONFIGS.defaultClipAction;
   // ANIMATION
-  let animationMixer;
-  let animationClips;
-  let previousAction;
-  let activeAction;
-  const clipActionsMap = new Map();
+  const animation = Animation();
   // DIRECTION
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
   const yRotateQuaternion = new THREE.Quaternion();
@@ -44,29 +42,14 @@ export function Character(onLoadCallback) {
     const model = gltf.scene;
     model.position.set(0, 0, 0);
     mesh.add(model);
-    animationMixer = new THREE.AnimationMixer(model);
-    animationClips = gltf.animations;
-    animationClips.filter(ac => ac.name !== 'TPose').forEach(ac => clipActionsMap.set(ac.name, animationMixer.clipAction(ac)));
-    setClipAction(defaultClipAction);
+    animation.init(gltf);
+    animation.playClipAction(defaultClipAction);
     if (onLoadCallback !== undefined) onLoadCallback();
   });
 
 
-
-  /////////////////////////////////////
-  // SET ANIMATION, VELOCITY, DIRECTION
   const setClipAction = (clipActionName) => {
-    previousAction = activeAction;
-    activeAction = clipActionsMap.get(clipActionName);
-    // TRANSITION TO NEW CLIP ACTION
-    if (previousAction === activeAction) return;
-    if (previousAction !== undefined ) previousAction.fadeOut(.5);
-    activeAction
-      .reset()
-      .setEffectiveTimeScale(1)
-      .setEffectiveWeight(1)
-      .fadeIn(.5)
-      .play();
+    animation.playClipAction(clipActionName);
     // SET NEW SPEED
     if (clipActionName === 'Idle') {
       speed = 0;
@@ -92,9 +75,6 @@ export function Character(onLoadCallback) {
 
   ////////////////////////////////////////
   // UPDATE ANIMATION, POSITION, DIRECTION
-  const updateMixer = (deltaSeconds) => {
-      animationMixer?.update(deltaSeconds);
-  }
   const updateRotation = () => {
     mesh.quaternion.rotateTowards(yRotateQuaternion, turningIncrement);
     const [x, yNow, z, w] = mesh.quaternion.toArray();
@@ -118,7 +98,7 @@ export function Character(onLoadCallback) {
   }
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
-    updateMixer(deltaSeconds);
+    animation?.update(deltaSeconds);
     updateRotation();
     updatePosition();
   }
