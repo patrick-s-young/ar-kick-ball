@@ -1,5 +1,5 @@
 # webxr-arcore-boilerplate
-WebXR ARCore boilerplate project for Android mobile browsers.
+WebXR ARCore boilerplate project for browser-based augmented reality.
 
 
 
