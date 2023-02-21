@@ -15,7 +15,8 @@ cd webxr-arcore-boilerplate
 npm install
 npm start
 ```
-
+## Device Requirements
+See Google's [ARCore supported devices](https://developers.google.com/ar/devices).
 
 ## Built With
 
