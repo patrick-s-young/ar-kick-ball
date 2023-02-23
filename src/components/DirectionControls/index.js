@@ -46,8 +46,10 @@ export const DirectionControls = ({
     const button = document.createElement('div');
     Object.entries(buttonStyles).forEach(([key, value]) => button.style[key] = value);
     button.style.backgroundColor = label === 'spacer' ? undefined : 'orange';
+    button.innerHTML = label === 'spacer' ? '&nbsp;' : `<img src='/images/arrow_${label}.png' />`;
     button.id = label;
-    button.onpointerdown  = label === 'spacer' ? undefined : (ev) => onMove({ ev, label });
+    button.onpointerdown = label === 'spacer' ? undefined : (ev) => onTouchStart({ ev, label });
+    preventLongPressMenu(button);
     return button;
   }
 
@@ -73,8 +75,35 @@ export const DirectionControls = ({
   }
 
 
-  const enableTouch = () => {
-    buttonContainer.addEventListener('touchend', () => setClipAction('Idle'))
+  const enableTouch = () => buttonContainer.addEventListener('touchend', onTouchEnd);
+
+
+  const onTouchStart = ({ ev, label }) => {
+    if (['TOP', 'RIGHT', 'BOTTOM', 'LEFT'].includes(ev.target.parentNode.id) === false) return;
+    ev.target.parentNode.style.backgroundColor = '#FFD580'; 
+    onMove({ ev, label });
+  }
+
+  const onTouchEnd = (ev) => {
+    if (['TOP', 'RIGHT', 'BOTTOM', 'LEFT'].includes(ev.target.parentNode.id) === false) return;
+    ev.target.parentNode.style.backgroundColor = 'orange'; 
+    //setClipAction('Idle');
+  }
+
+  function absorbEvent_(event) {
+    var e = event || window.event;
+    e.preventDefault && e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+    e.cancelBubble = true;
+    e.returnValue = false;
+    return false;
+  }
+
+  function preventLongPressMenu(node) {
+    node.ontouchstart = absorbEvent_;
+    node.ontouchmove = absorbEvent_;
+    //node.ontouchend = absorbEvent_;
+    node.ontouchcancel = absorbEvent_;
   }
 
   return {
