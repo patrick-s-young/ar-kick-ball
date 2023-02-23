@@ -2,37 +2,35 @@ import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
-// Configs
-import { CONFIGS } from './configs';
 
 
-export function Character(onLoadCallback) {
+
+export function Character({
+  assetPath,
+  walkingSpeed,
+  meshScaler,
+  speedScaler,
+  defaultClipAction,
+  turningIncrement,
+  onLoadCallback }) {
   // LOADER
   const gltfLoader = new GLTFLoader();
   // MODEL
   const mesh = new THREE.Group();
-  mesh.name = CONFIGS.name;
   mesh.matrixAutoUpdate = true;
-  mesh.visible = CONFIGS.defaultVisible;
+  mesh.visible = false;
   mesh.position.set(0, 0, 0);
-  const assetPath = CONFIGS.assetPath;
-  const meshScaler = CONFIGS.meshScaler;
-  const defaultClipAction = CONFIGS.defaultClipAction;
   // ANIMATION
   const animation = Animation();
   // DIRECTION
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
   const yRotateQuaternion = new THREE.Quaternion();
-  const turningIncrement = CONFIGS.turningIncrement;
   let yPrev;
   let targetRadians;
   let xDirection;
   let zDirection;
   // SPEED
   let speed = 0;
-  const walkingSpeed = CONFIGS.walkingSpeed;
-  const runningSpeed = CONFIGS.runningSpeed;
-  const speedScaler = CONFIGS.speedScaler;
 
 
   setDirection(0);
@@ -55,8 +53,6 @@ export function Character(onLoadCallback) {
       speed = 0;
     } else if (clipActionName === 'Walk') {
       speed = walkingSpeed * speedScaler;
-    } else {
-      speed = runningSpeed * speedScaler;
     }
   }
   // SET DIRECTION

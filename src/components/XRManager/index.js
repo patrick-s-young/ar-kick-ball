@@ -9,17 +9,12 @@ export function XRManager({
   let onSelectCallback;
 
   if ('xr' in window.navigator) {
-    console.log('xr detected')
-  } else {
-    return console.log('no xr')
-  }
-
-  if ('xr' in window.navigator) {
     startButton.self.addEventListener('click', onClickArButton);
     navigator.xr.isSessionSupported('immersive-ar')
       .then(isSupported => startButton.disabled = !isSupported);
+  } else {
+    return startButton.innerHTML = 'AR Not Suported';
   }
-
 
   function onClickArButton () {
     if (!xrSession) {

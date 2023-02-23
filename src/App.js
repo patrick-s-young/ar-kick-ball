@@ -15,6 +15,8 @@ import { HitTestManager } from './components/HitTestManager';
 // UI
 import { DirectionControls } from './components/DirectionControls';
 import { ARButton } from './components/ARButton'
+// Configs
+import { CONFIGS } from './configs';
 // Styles
 import './style.css';
 
@@ -30,7 +32,7 @@ export const App = () => {
   // GLTF
   const reticle = Reticle();
   scene.add(reticle.getMesh());
-  const soldier = Character(initDirectionMenu);
+  const soldier = Character({...CONFIGS, onLoadCallback: initDirectionMenu });
   scene.add(soldier.mesh);
   // UI
   const uiParent = document.createElement('div');
