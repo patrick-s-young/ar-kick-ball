@@ -6,6 +6,8 @@ export function Renderer() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.xr.enabled = true;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   return {
     setReferenceSpaceType: renderer.xr.setReferenceSpaceType,

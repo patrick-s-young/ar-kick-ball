@@ -37,6 +37,7 @@ export function Character({
 
   gltfLoader.load(assetPath, (gltf) => {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
+    gltf.scene.traverse((node) => { if (node.isMesh) node.castShadow = true });
     const model = gltf.scene;
     model.position.set(0, 0, 0);
     mesh.add(model);
@@ -103,6 +104,7 @@ export function Character({
 
   return {
     get mesh() { return mesh },
+    get position() { return mesh.position},
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },

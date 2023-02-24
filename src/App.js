@@ -7,6 +7,8 @@ import { Lights } from './components/Lights';
 // GLTF
 import { Reticle } from './components/Reticle';
 import { Character } from './components/Character';
+// Geometry
+import { Floor } from './components/Floor';
 // Renderer
 import { Renderer } from './components/Renderer';
 // WebXR
@@ -34,6 +36,9 @@ export const App = () => {
   scene.add(reticle.getMesh());
   const soldier = Character({...CONFIGS, onLoadCallback: initDirectionMenu });
   scene.add(soldier.mesh);
+  // Geometry
+  const floor = new Floor();
+  scene.add(floor.mesh);
   // UI
   const uiParent = document.createElement('div');
   uiParent.style.position = 'absolute';
@@ -75,6 +80,7 @@ export const App = () => {
       const workingPositionVec3 = new THREE.Vector3();
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
       soldier.setMatrixFromArray(workingPositionVec3);
+      floor.setMatrixFromArray(workingPositionVec3);
       // disable hit test
       hitTestActive = false;
       reticle.visible = false; 
@@ -100,6 +106,7 @@ export const App = () => {
       }
     reticle.updateMixer(dt);
     soldier.update(dt);
+    floor.position = soldier.position;
     renderer.render(scene.self, camera.self);
   }
 
