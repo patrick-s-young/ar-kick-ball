@@ -1,34 +1,12 @@
-
+import { buttonContainerStyles, buttonStyles, buttonRows } from "./configs";
 
 export const DirectionControls = ({ 
   uiParent, 
   setDirection,
   setClipAction,
   camera }) => {
-  const { innerHeight, innerWidth } = window;
-  const buttonSize = Math.trunc(innerWidth * .25);
-  const buttonContainerStyles = {
-    display: 'flex',
-    position: 'relative',
-    marginLeft: `${Math.trunc(buttonSize * .5)}px`,
-    marginTop: `${innerHeight - buttonSize * 2.9}px`,
-    width: `${innerWidth}px`,
-    height: `${innerWidth}px`
-  }
-  const buttonStyles = {
-    display: 'flex',
-    width: `${buttonSize}px`,
-    height: `${buttonSize}px`,
-    borderRadius: '50%',
-    textAlign: 'center',
-    innerHTML: '&nbsp;'
-  }
-  const buttonRows = [
-    ['spacer', 'LEFT', 'spacer'],
-    ['TOP', 'spacer', 'BOTTOM'],
-    ['spacer', 'RIGHT', 'spacer']
-  ];
-
+// onTouchEnd delay before transition from 'Walk' to 'Idle'
+  let timeoutId;
 // Button container
   const buttonContainer = document.createElement('div');
   Object.entries(buttonContainerStyles).forEach(([key, value]) => buttonContainer.style[key] = value);
@@ -71,23 +49,23 @@ export const DirectionControls = ({
       LEFT: cameraYradians + Math.PI/2
     }
     setDirection(yAngle[label] );
-    setClipAction('Walk')
+    setClipAction('Walk');
   }
 
 
   const enableTouch = () => buttonContainer.addEventListener('touchend', onTouchEnd);
 
-
   const onTouchStart = ({ ev, label }) => {
     if (['TOP', 'RIGHT', 'BOTTOM', 'LEFT'].includes(ev.target.parentNode.id) === false) return;
     ev.target.parentNode.style.backgroundColor = '#FFD580'; 
+    clearTimeout(timeoutId);
     onMove({ ev, label });
   }
 
   const onTouchEnd = (ev) => {
     if (['TOP', 'RIGHT', 'BOTTOM', 'LEFT'].includes(ev.target.parentNode.id) === false) return;
     ev.target.parentNode.style.backgroundColor = 'orange'; 
-    //setClipAction('Idle');
+    timeoutId = setTimeout(() => setClipAction('Idle'), 500);
   }
 
   function absorbEvent_(event) {
@@ -108,6 +86,6 @@ export const DirectionControls = ({
 
   return {
     enableTouch,
-    get domElement() { return buttonContainer}
+    get domElement() { return buttonContainer }
   }
 }

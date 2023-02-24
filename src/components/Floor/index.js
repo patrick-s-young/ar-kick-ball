@@ -23,7 +23,8 @@ export function Floor() {
 
   return {
     get mesh() { return mesh },
-    set position(newPosition) { mesh.position.set(...newPosition)},
+    set position(newPosition) { mesh.position.set(...newPosition) },
+    set visible(isVisible) { mesh.visible = isVisible },
     setMatrixFromArray
   }
 }

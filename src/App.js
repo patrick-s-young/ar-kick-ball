@@ -79,9 +79,12 @@ export const App = () => {
     if (reticle.visible) {
       const workingPositionVec3 = new THREE.Vector3();
       workingPositionVec3.setFromMatrixPosition(reticle.matrix);
-      soldier.setMatrixFromArray(workingPositionVec3);
-      floor.setMatrixFromArray(workingPositionVec3);
-      // disable hit test
+      // set position & show character and shadow
+      soldier.position = workingPositionVec3;
+      soldier.visible = true;
+      floor.position = workingPositionVec3;
+      floor.visible = true;
+      // disable hit test & hide reticle
       hitTestActive = false;
       reticle.visible = false; 
       // move to UI component
