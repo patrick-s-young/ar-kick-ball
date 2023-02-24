@@ -4,7 +4,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Animation } from '../Animation';
 
 
-
 export function Character({
   assetPath,
   walkingSpeed,
@@ -61,14 +60,6 @@ export function Character({
     targetRadians = radians;
     yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
   }
-  // SET POSITION TO HIT TEST RESULTS
-  const setMatrixFromArray = (matrixArray) => {
-    mesh.position.set(...matrixArray);
-    mesh.visible = true;
-    //mesh.matrix.fromArray(matrixArray);
-  }
-
-
 
   ////////////////////////////////////////
   // UPDATE ANIMATION, POSITION, DIRECTION
@@ -105,12 +96,12 @@ export function Character({
   return {
     get mesh() { return mesh },
     get position() { return mesh.position},
+    set position(newPosition) { mesh.position.set(...newPosition) },
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
     get clipActionsMap() { return clipActionsMap },
     update,
-    setMatrixFromArray,
     setClipAction,
     setDirection
   }
