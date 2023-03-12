@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
+import { Rotation } from '../Rotation';
 
 
 export function Character({
@@ -19,20 +20,12 @@ export function Character({
   mesh.matrixAutoUpdate = true;
   mesh.visible = false;
   mesh.position.set(0, 0, 0);
-  // ANIMATION
+  // ANIMATION HANDLER
   const animation = Animation();
-  // DIRECTION
-  const yRotateAngle = new THREE.Vector3(0, 1, 0);
-  const yRotateQuaternion = new THREE.Quaternion();
-  let yPrev;
-  let targetRadians;
-  let xDirection;
-  let zDirection;
+  // ROTATION HANDLER
+  const rotation = Rotation({ mesh, defaultRotation: 0, turningIncrement });
   // SPEED
   let speed = 0;
-
-
-  setDirection(0);
 
   gltfLoader.load(assetPath, (gltf) => {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
@@ -55,43 +48,19 @@ export function Character({
       speed = walkingSpeed * speedScaler;
     }
   }
-  // SET DIRECTION
-  function setDirection (radians) {
-    targetRadians = radians;
-    yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians);
+
+  const updatePosition = () => {
+    mesh.position.x += rotation.xMagnitude * speed;
+    mesh.position.z -= rotation.zMagnitude * speed;
   }
 
-  ////////////////////////////////////////
-  // UPDATE ANIMATION, POSITION, DIRECTION
-  const updateRotation = () => {
-    mesh.quaternion.rotateTowards(yRotateQuaternion, turningIncrement);
-    const [x, yNow, z, w] = mesh.quaternion.toArray();
-    if (yNow !== yPrev) {
-      const angle = 2 * Math.acos(w);
-      let s;
-      if (1 - w * w < 0.000001) {
-        s = 1;
-      } else {
-        s = Math.sqrt(1 - w * w);
-      }
-      const yAngle = yNow/s * angle;
-      xDirection= Math.sin(-yAngle);
-      zDirection = Math.cos(yAngle);
-      yPrev = yNow;
-    }
-  }
-  const updatePosition = () => {
-    mesh.position.x += xDirection * speed;
-    mesh.position.z -= zDirection * speed;
-  }
   const update = (deltaSeconds) => {
     if (mesh.visible === false) return;
     animation?.update(deltaSeconds);
-    updateRotation();
+    rotation?.update();
     updatePosition();
   }
-//
-////////////////////////
+
 
   return {
     get mesh() { return mesh },
@@ -103,6 +72,6 @@ export function Character({
     get clipActionsMap() { return clipActionsMap },
     update,
     setClipAction,
-    setDirection
+    setDirection: (radians) =>  rotation.setDirection(radians)
   }
 }
