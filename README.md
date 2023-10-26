@@ -1,5 +1,5 @@
-# webxr-arcore-boilerplate
-WebXR ARCore boilerplate project for browser-based augmented reality.
+# ar-kick-ball
+AR Kick Ball - WebXR ARCore-enabled game for browser-based augmented reality.
 
 
 
