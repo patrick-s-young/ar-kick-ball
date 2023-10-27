@@ -2,21 +2,15 @@
 AR Kick Ball - WebXR ARCore-enabled game for browser-based augmented reality.
 
 
-
-![webxr-arcore-boilerplate_screen_256_512_15fps](https://user-images.githubusercontent.com/42591798/220235740-9b053463-b347-4e64-9009-477d2fabaeb1.gif)
-
-
-### [Demo Link - Use ARCore Supported Device To View](https://patrick-s-young.github.io)
-
 ## Running Locally
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
 ```sh
-git clone https://github.com/patrick-s-young/webxr-arcore-boilerplate.git # or clone your own fork
-cd webxr-arcore-boilerplate
-npm install
-npm start
+git clone [https://github.com/patrick-s-young/webxr-arcore-boilerplate.git](https://github.com/patrick-s-young/ar-kick-ball.git) # or clone your own fork
+cd ar-kick-ball
+yarn
+yarn start
 ```
 ## Device Requirements
 See Google's [ARCore supported devices](https://developers.google.com/ar/devices).
