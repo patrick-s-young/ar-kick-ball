@@ -7,6 +7,7 @@ export function Camera() {
 
   return {
     get self() { return camera },
-    get quaternion() { return camera.quaternion }
+    get quaternion() { return camera.quaternion },
+    setPosition: ({ x, y, z }) => camera.position.set(x, y, z)
   }
 }
