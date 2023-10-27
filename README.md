@@ -1,7 +1,7 @@
 # ar-kick-ball
 AR Kick Ball - WebXR ARCore-enabled game for mobile browser-based augmented reality.
 
-
+Project created with [webxr-arcore-boilerplate](https://github.com/patrick-s-young/webxr-arcore-boilerplate)
 ## Running Locally
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
