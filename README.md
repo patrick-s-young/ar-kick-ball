@@ -1,5 +1,5 @@
 # ar-kick-ball
-AR Kick Ball - WebXR ARCore-enabled game for browser-based augmented reality.
+AR Kick Ball - WebXR ARCore-enabled game for mobile browser-based augmented reality.
 
 
 ## Running Locally
