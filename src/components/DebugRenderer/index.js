@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export function DebugRenderer () {
   const renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( window.innerWidth - 100, window.innerHeight - 100);
   document.body.appendChild( renderer.domElement );
 
   return {
