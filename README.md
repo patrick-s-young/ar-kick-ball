@@ -7,7 +7,7 @@ AR Kick Ball - WebXR ARCore-enabled game for mobile browser-based augmented real
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
 ```sh
-git clone [https://github.com/patrick-s-young/webxr-arcore-boilerplate.git](https://github.com/patrick-s-young/ar-kick-ball.git) # or clone your own fork
+git clone https://github.com/patrick-s-young/ar-kick-ball.git # or clone your own fork
 cd ar-kick-ball
 yarn
 yarn start
