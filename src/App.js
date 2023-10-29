@@ -18,7 +18,7 @@ import { HitTestManager } from './components/HitTestManager';
 import { DirectionControls } from './components/DirectionControls';
 import { ARButton } from './components/ARButton'
 // Configs
-import { CONFIGS } from './configs';
+import { CONFIGS } from './configs/soldier.config';
 // Styles
 import './style.css';
 

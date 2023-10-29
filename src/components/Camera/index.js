@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import * as THREE from 'three';
 
 export function Camera() {
