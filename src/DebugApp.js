@@ -1,5 +1,7 @@
 // Three
 import * as THREE from 'three';
+// CANNON
+import * as CANNON from 'cannon-es';
 // Scene
 import { Scene } from './components/Scene';
 import { Camera } from './components/Camera';
@@ -8,15 +10,20 @@ import { Lights } from './components/Lights';
 import { Character } from './components/Character';
 // Geometry
 import { Floor } from './components/Floor';
-import { DebugFloor } from './components/DebugFloor';
-// DebugRenderer
-import { DebugRenderer } from './components/DebugRenderer';
+import { Ball } from './components/Ball';
+import { DebugFloor } from './debug/DebugFloor';
+// Cannon Bodies
+import { FloorBody } from './cannon/bodies/FloorBody';
+import { BallBody } from './cannon/bodies/BallBody';
+import { initContactMaterials } from './cannon/materials';
+// Debug Renderer
+import { DebugRenderer } from './debug/DebugRenderer';
 // Debug Controls
-import { KeyEvents } from './components/KeyEvents';
-// Configs
-import { CONFIGS } from './configs';
-// Dev/Debug
+import { KeyEvents } from './debug/KeyEvents';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import CannonDebugger from 'cannon-es-debugger';
+// Configs
+import { CONFIGS } from './configs/soldier.config';
 // Styles
 import './style.css';
 
@@ -38,8 +45,19 @@ export const DebugApp = () => {
   // Geometry
   const floor = new Floor();
   scene.add(floor.mesh);
-  const debugFloor = new DebugFloor();
+  const debugFloor = new DebugFloor({});
   scene.add(debugFloor.mesh);
+  // Cannon
+  const world = new CANNON.World();
+  world.gravity.set(0, -30, 0);
+  world.broadphase = new CANNON.NaiveBroadphase();
+  initContactMaterials({ world })
+  const floorBody = FloorBody({ world });
+  debugFloor.setBody(floorBody.body);
+  const ball = new Ball();
+  scene.add(ball.mesh);
+  const ballBody = BallBody({ world });
+  ball.setBody(ballBody.body);
   // Renderer
   const renderer = new DebugRenderer();
   // Debug Controls
@@ -68,11 +86,16 @@ export const DebugApp = () => {
     keyAction: 'keydown', 
     callBack: () => { soldier.setDirection(Math.PI/2); soldier.setClipAction('Walk'); }
     });
+
   const controls = new OrbitControls( camera.self, renderer.domElement );
+  const cannonDebugger = new CannonDebugger(scene.self, world);
 
   function animate() {
     const dt = animationClock.getDelta();
     soldier.update(dt);
+    ball.update();
+    world.step(dt);
+    cannonDebugger.update();
     requestAnimationFrame( animate );
     controls.update();
     renderer.render( scene.self, camera.self );
