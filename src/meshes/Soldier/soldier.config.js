@@ -1,8 +1,8 @@
-export const CONFIGS = {
+export const SOLDIER_CONFIG = ({ isDebugMode = false }) => ({
   assetPath: '/models/Soldier.glb',
-  walkingSpeed: .015,
+  walkingSpeed: isDebugMode === true ? .015 : .028,
   meshScaler: .125,
   speedScaler: .25,
   defaultClipAction: 'Idle',
   turningIncrement: .05
-}
+});
