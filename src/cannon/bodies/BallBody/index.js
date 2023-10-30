@@ -1,6 +1,6 @@
 import * as CANNON from 'cannon-es';
-import { COLLISION_GROUPS, COLLISION_FILTER_MASKS } from '../../collisions';
-import { ballMaterial } from '../../materials';
+import { COLLISION_GROUPS, COLLISION_FILTER_MASKS } from '@cannon/collisions';
+import { ballMaterial } from '@cannon/materials';
 
 export const BallBody = ({
   world

@@ -34,5 +34,12 @@ module.exports = (env) => ({
           use: ['style-loader', 'css-loader'],
         }
       ],
+    },
+    resolve: {
+      alias: {
+        "@debug": path.resolve(__dirname, "src/debug"),
+        "@cannon": path.resolve(__dirname, "src/cannon"),
+        "@components": path.resolve(__dirname, "src/components")
+      }
     }
 });
