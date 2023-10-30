@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack serve --open --https",
+    "debug": "webpack serve --open --https --env debug=true",
     "build": "webpack"
   },
   "keywords": [],
