@@ -11,15 +11,15 @@ import { Character } from './components/Character';
 // Geometry
 import { Floor } from './components/Floor';
 import { Ball } from './components/Ball';
-import { DebugFloor } from './debug/DebugFloor';
+import { DebugFloor } from '@debug/DebugFloor';
 // Cannon Bodies
-import { FloorBody } from './cannon/bodies/FloorBody';
-import { BallBody } from './cannon/bodies/BallBody';
-import { initContactMaterials } from './cannon/materials';
+import { FloorBody } from '@cannon/bodies/FloorBody';
+import { BallBody } from '@cannon/bodies/BallBody';
+import { initContactMaterials } from '@cannon/materials';
 // Debug Renderer
-import { DebugRenderer } from './debug/DebugRenderer';
+import { DebugRenderer } from '@debug/DebugRenderer';
 // Debug Controls
-import { KeyEvents } from './debug/KeyEvents';
+import { KeyEvents } from '@debug/KeyEvents';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import CannonDebugger from 'cannon-es-debugger';
 // Configs

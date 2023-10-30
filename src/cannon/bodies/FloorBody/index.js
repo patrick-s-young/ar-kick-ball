@@ -1,6 +1,6 @@
 import * as CANNON from 'cannon-es';
-import { COLLISION_GROUPS } from '../../collisions';
-import { floorMaterial } from '../../materials';
+import { COLLISION_GROUPS } from '@cannon/collisions';
+import { floorMaterial } from '@cannon/materials';
 
 
 export const FloorBody = ({
