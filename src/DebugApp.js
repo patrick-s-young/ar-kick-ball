@@ -1,32 +1,30 @@
-// Three
-import * as THREE from 'three';
-// CANNON
+// cannon
 import * as CANNON from 'cannon-es';
-// Scene
-import { Scene } from './components/Scene';
-import { Camera } from './components/Camera';
-import { Lights } from './components/Lights';
-// GLTF
-import { Character } from './components/Character';
-// Geometry
-import { Floor } from './components/Floor';
-import { Ball } from './components/Ball';
-import { DebugFloor } from '@debug/DebugFloor';
-// Cannon Bodies
-import { FloorBody } from '@cannon/bodies/FloorBody';
-import { BallBody } from '@cannon/bodies/BallBody';
-import { initContactMaterials } from '@cannon/materials';
-// Debug Renderer
-import { DebugRenderer } from '@debug/DebugRenderer';
-// Debug Controls
-import { KeyEvents } from '@debug/KeyEvents';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import CannonDebugger from 'cannon-es-debugger';
-// Configs
-import { CONFIGS } from './configs/soldier.config';
-// Styles
+import {
+  BallBody,
+  FloorBody,
+  initContactMaterials } from '@cannon'; 
+// debug
+import {
+  DebugFloor,
+  DebugRenderer,
+  KeyEvents } from '@debug';
+// meshes
+import {
+  Ball,
+  Floor,
+  SOLDIER_CONFIG } from '@meshes';
+// three
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import {
+  Camera,
+  Character,
+  Lights,
+  Scene } from '@three';
+// styles
 import './style.css';
-
 
 //////////////////
 // BEGIN COMPONENT
@@ -38,7 +36,7 @@ export const DebugApp = () => {
   const lights = Lights();
   scene.add(lights.getLights());
   // GLTF
-  const soldier = Character({...CONFIGS});
+  const soldier = Character({...SOLDIER_CONFIG({ isDebugMode: true })});
   soldier.mesh.visible = true;
   scene.add(soldier.mesh);
   const animationClock = new THREE.Clock();

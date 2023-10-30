@@ -37,9 +37,13 @@ module.exports = (env) => ({
     },
     resolve: {
       alias: {
-        "@debug": path.resolve(__dirname, "src/debug"),
         "@cannon": path.resolve(__dirname, "src/cannon"),
-        "@components": path.resolve(__dirname, "src/components")
+        "@debug": path.resolve(__dirname, "src/debug"),
+        "@math": path.resolve(__dirname, "src/math"),
+        "@meshes": path.resolve(__dirname, "src/meshes"),
+        "@three": path.resolve(__dirname, "src/three"),
+        "@ui": path.resolve(__dirname, "src/ui"),
+        "@webXR": path.resolve(__dirname, "src/webXR")
       }
     }
 });

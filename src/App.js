@@ -1,25 +1,33 @@
-// Three
+// cannon
+// import * as CANNON from 'cannon-es';
+// import CannonDebugger from 'cannon-es-debugger';
+// import {
+//   BallBody,
+//   FloorBody,
+//   initContactMaterials } from '@cannon'; 
+// meshes
+import {
+  //Ball,
+  Floor,
+  Reticle,
+  SOLDIER_CONFIG } from '@meshes';
+// three
 import * as THREE from 'three';
-// Scene
-import { Scene } from './components/Scene';
-import { Camera } from './components/Camera';
-import { Lights } from './components/Lights';
-// GLTF
-import { Reticle } from './components/Reticle';
-import { Character } from './components/Character';
-// Geometry
-import { Floor } from './components/Floor';
-// Renderer
-import { Renderer } from './components/Renderer';
-// WebXR
-import { XRManager } from './components/XRManager';
-import { HitTestManager } from './components/HitTestManager';
-// UI
-import { DirectionControls } from './components/DirectionControls';
-import { ARButton } from './components/ARButton'
-// Configs
-import { CONFIGS } from './configs/soldier.config';
-// Styles
+import {
+  Camera,
+  Character,
+  Lights,
+  Renderer,
+  Scene } from '@three';
+// ui
+import {
+  ARButton,
+  DirectionControls } from '@ui';
+// webXR
+import {
+  HitTestManager,
+  XRManager } from '@webXR';
+// styles
 import './style.css';
 
 
@@ -34,7 +42,7 @@ export const App = () => {
   // GLTF
   const reticle = Reticle();
   scene.add(reticle.getMesh());
-  const soldier = Character({...CONFIGS, onLoadCallback: initDirectionMenu });
+  const soldier = Character({...SOLDIER_CONFIG({ isDebugMode: false }), onLoadCallback: initDirectionMenu });
   scene.add(soldier.mesh);
   // Geometry
   const floor = new Floor();

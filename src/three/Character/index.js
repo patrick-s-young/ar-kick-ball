@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
-import { Rotation } from '../Rotation';
+import { Rotation } from '../../math/Rotation';
 
 
 export function Character({
