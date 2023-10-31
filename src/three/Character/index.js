@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
@@ -26,6 +27,9 @@ export function Character({
   const rotation = Rotation({ mesh, defaultRotation: 0, turningIncrement });
   // SPEED
   let speed = 0;
+  // BODY
+  let body;
+
 
   gltfLoader.load(assetPath, (gltf) => {
     gltf.scene.scale.set(meshScaler, meshScaler, meshScaler);
@@ -35,7 +39,7 @@ export function Character({
     mesh.add(model);
     animation.init(gltf);
     animation.playClipAction(defaultClipAction);
-    if (onLoadCallback !== undefined) onLoadCallback();
+    if (onLoadCallback !== undefined) onLoadCallback(mesh);
   });
 
 
@@ -50,8 +54,15 @@ export function Character({
   }
 
   const updatePosition = () => {
-    mesh.position.x += rotation.xMagnitude * speed;
-    mesh.position.z -= rotation.zMagnitude * speed;
+    const x = rotation.xMagnitude * speed;
+    const y = rotation.zMagnitude * speed;
+    mesh.position.x += x;
+    mesh.position.z -= y;
+
+    if (body === undefined) return;
+    body.position.x += x;
+    body.position.z -= y;
+    body.quaternion.copy(rotation.quaternion)
   }
 
   const update = (deltaSeconds) => {
@@ -61,6 +72,13 @@ export function Character({
     updatePosition();
   }
 
+  const setVisible = (isVisible) => mesh.visible = isVisible;
+
+  const getBoundingBox = () => new THREE.Box3().setFromObject(mesh);
+
+  const setBody = (_body) => {
+    body = _body;
+  }
 
   return {
     get mesh() { return mesh },
@@ -72,6 +90,9 @@ export function Character({
     get clipActionsMap() { return clipActionsMap },
     update,
     setClipAction,
-    setDirection: (radians) =>  rotation.setDirection(radians)
+    setDirection: (radians) =>  rotation.setDirection(radians),
+    setVisible,
+    getBoundingBox,
+    setBody
   }
 }

@@ -10,7 +10,7 @@ export const Rotation = ({
   let yPrev;
   let targetRadians = defaultRotation;
   const yRotateAngle = new THREE.Vector3(0, 1, 0);
-  const yRotateQuaternion = new THREE.Quaternion();
+  let yRotateQuaternion = new THREE.Quaternion();
   yRotateQuaternion.setFromAxisAngle(yRotateAngle, targetRadians)
   
   function setDirection (radians) {
@@ -41,6 +41,8 @@ export const Rotation = ({
     setDirection,
     update,
     get xMagnitude() { return xMagnitude },
-    get zMagnitude() { return zMagnitude }
+    get zMagnitude() { return zMagnitude },
+    get quaternion() { return mesh.quaternion },
+    get yAxis() { return yPrev }
   }
 }
