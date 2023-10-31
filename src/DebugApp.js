@@ -2,6 +2,7 @@
 import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
+  CharacterBody,
   BallBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
@@ -29,74 +30,96 @@ import './style.css';
 //////////////////
 // BEGIN COMPONENT
 export const DebugApp = () => {
-  // SCENE SETUP
-  const scene = Scene();
-  const camera = Camera();
-  camera.setPosition({ x: 0, y: .4, z: .6 });
-  const lights = Lights();
-  scene.add(lights.getLights());
-  // GLTF
-  const soldier = Character({...SOLDIER_CONFIG({ isDebugMode: true })});
-  soldier.mesh.visible = true;
-  scene.add(soldier.mesh);
-  const animationClock = new THREE.Clock();
-  // Geometry
-  const floor = new Floor();
-  scene.add(floor.mesh);
-  const debugFloor = new DebugFloor({});
-  scene.add(debugFloor.mesh);
-  // Cannon
+  // three
+  const three = {
+    scene: Scene(),
+    camera: Camera(),
+    lights: Lights(),
+    renderer: new DebugRenderer()
+  }
+  three.camera.setPosition({ x: 0, y: .4, z: .6 });
+  three.scene.add(three.lights.getLights());
+
+  // cannon
   const world = new CANNON.World();
-  world.gravity.set(0, -30, 0);
+  world.gravity.set(0, -10, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
-  initContactMaterials({ world })
-  const floorBody = FloorBody({ world });
-  debugFloor.setBody(floorBody.body);
-  const ball = new Ball();
-  scene.add(ball.mesh);
-  const ballBody = BallBody({ world });
-  ball.setBody(ballBody.body);
-  // Renderer
-  const renderer = new DebugRenderer();
-  // Debug Controls
+  initContactMaterials({ world });
+  const cannon = {
+    world,
+    floorBody: FloorBody({ world }),
+    ballBody: BallBody({ world }),
+    debugger: new CannonDebugger(three.scene.self, world)
+  }
+
+  // meshes
+  const meshes = {
+    ball: new Ball(),
+    soldier: Character({...SOLDIER_CONFIG({ isDebugMode: true }), onLoadCallback: (mesh) => onSoldierMeshLoaded(mesh)}),
+    floor: new Floor(),
+    debugFloor: new DebugFloor({})
+  }
+  meshes.soldier.setVisible(true);
+  three.scene.add([
+    meshes.ball.mesh,
+    meshes.soldier.mesh,
+    meshes.floor.mesh,
+    meshes.debugFloor.mesh
+  ]);
+  meshes.debugFloor.setBody(cannon.floorBody.body);
+  meshes.ball.setBody(cannon.ballBody.body);
+
+  function onSoldierMeshLoaded (_mesh) {
+    // const { min, max } = meshes.soldier.getBoundingBox();
+    // const boundingBoxSize = { 
+    //   x: max.x - min.x, 
+    //   y: max.y - min.y, 
+    //   z: max.z - min.z 
+    // }
+    cannon.characterBody = CharacterBody({ world });
+    meshes.soldier.setBody(cannon.characterBody.body);
+  }
+
+
+  // debug 
   const keyEvents = new KeyEvents();
   keyEvents.addTimeOutAction({
     timeoutDuration: 500,
-    timeoutCallback: () => soldier.setClipAction('Idle')
+    timeoutCallback: () => meshes.soldier.setClipAction('Idle')
   })
   keyEvents.addSubscriber({ 
     keyName: 'ArrowUp', 
     keyAction: 'keydown', 
-    callBack: () => { soldier.setDirection(0); soldier.setClipAction('Walk'); }
+    callBack: () => { meshes.soldier.setDirection(0); meshes.soldier.setClipAction('Walk'); }
     });
   keyEvents.addSubscriber({ 
     keyName: 'ArrowRight', 
     keyAction: 'keydown', 
-    callBack: () => { soldier.setDirection(-Math.PI/2); soldier.setClipAction('Walk'); }
+    callBack: () => { meshes.soldier.setDirection(-Math.PI/2); meshes.soldier.setClipAction('Walk'); }
     });
   keyEvents.addSubscriber({ 
     keyName: 'ArrowDown', 
     keyAction: 'keydown', 
-    callBack: () => { soldier.setDirection(Math.PI); soldier.setClipAction('Walk'); }
+    callBack: () => { meshes.soldier.setDirection(Math.PI); meshes.soldier.setClipAction('Walk'); }
     });
   keyEvents.addSubscriber({ 
     keyName: 'ArrowLeft', 
     keyAction: 'keydown', 
-    callBack: () => { soldier.setDirection(Math.PI/2); soldier.setClipAction('Walk'); }
+    callBack: () => { meshes.soldier.setDirection(Math.PI/2); meshes.soldier.setClipAction('Walk'); }
     });
+  const controls = new OrbitControls( three.camera.self, three.renderer.domElement );
 
-  const controls = new OrbitControls( camera.self, renderer.domElement );
-  const cannonDebugger = new CannonDebugger(scene.self, world);
-
+  // animation loop
+  const animationClock = new THREE.Clock();
   function animate() {
     const dt = animationClock.getDelta();
-    soldier.update(dt);
-    ball.update();
-    world.step(dt);
-    cannonDebugger.update();
+    meshes.soldier.update(dt);
+    meshes.ball.update();
+    cannon.world.step(dt);
+    cannon.debugger.update();
     requestAnimationFrame( animate );
     controls.update();
-    renderer.render( scene.self, camera.self );
+    three.renderer.render( three.scene.self, three.camera.self );
   }
   animate();
 }

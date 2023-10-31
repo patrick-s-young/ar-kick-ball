@@ -5,10 +5,10 @@ import { ballMaterial } from '@cannon/materials';
 export const BallBody = ({
   world
 }) => {
-  const startPosition = [.1, .5, 0];
-  const radius = .025;
+  const startPosition = [.2, .2, 0];
+  const radius = .05;
   const body = new CANNON.Body({ 
-    mass: 1, 
+    mass: .5, 
     shape: new CANNON.Sphere(radius),
     position: new CANNON.Vec3(...startPosition),
     material: ballMaterial,

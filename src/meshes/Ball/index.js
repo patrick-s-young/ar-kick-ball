@@ -4,7 +4,7 @@ export function Ball() {
   const materialBasic = new THREE.MeshBasicMaterial({
     color: 0xff0000
   });
-  const geometry = new THREE.SphereGeometry(.025, 32, 16);
+  const geometry = new THREE.SphereGeometry(.05, 16, 8);
   const mesh = new THREE.Mesh( geometry, materialBasic );
   mesh.position.set(0, 0, 0);
   mesh.visible = true;
