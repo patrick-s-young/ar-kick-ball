@@ -19,14 +19,13 @@ export const BallBody = ({ world }) => {
   }
 
   const setPosition = (positionArr) => {
-    console.log('positionArr:', positionArr)
     body.position.set(...positionArr)
   }
 
   return {
     get body() { return body },
+    get position() { return body.position },
     addToWorld,
-    setPosition,
-    get position() { return body.position }
+    setPosition
   }
 }
