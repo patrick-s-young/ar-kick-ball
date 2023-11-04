@@ -80,6 +80,13 @@ export function Character({
     body = _body;
   }
 
+  const setPosition = ({x, y, z}) => {
+    mesh.position.x = x;
+    mesh.position.z = z;
+    body.position.x = x;
+    body.position.z = z;
+  }
+
   return {
     get mesh() { return mesh },
     get position() { return mesh.position},
@@ -93,6 +100,7 @@ export function Character({
     setDirection: (radians) =>  rotation.setDirection(radians),
     setVisible,
     getBoundingBox,
-    setBody
+    setBody,
+    setPosition
   }
 }

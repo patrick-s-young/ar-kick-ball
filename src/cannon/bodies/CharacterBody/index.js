@@ -25,6 +25,7 @@ export const CharacterBody = ({
 
   world.addBody(body);
 
+
   return {
     get body() { return body }
   }

@@ -22,9 +22,12 @@ export const FloorBody = ({
     quaternion
   });
 
-  world.addBody(boxBody);
+  const addToWorld = () => {
+    world.addBody(boxBody);
+  }
 
   return {
-    get body() { return boxBody }
+    get body() { return boxBody },
+    addToWorld
   }
 }
