@@ -7,7 +7,7 @@ export function Ball() {
   const geometry = new THREE.SphereGeometry(.05, 16, 8);
   const mesh = new THREE.Mesh( geometry, materialBasic );
   mesh.position.set(0, 0, 0);
-  mesh.visible = true;
+  mesh.visible = false;
   let body;
 
   const setBody = (_body) => {
@@ -21,6 +21,8 @@ export function Ball() {
 
   return {
     get mesh() { return mesh },
+    set visible(isVisible) { mesh.visible = isVisible },
+    get visible() { return mesh.visible },
     setBody,
     setPosition: (newPosition) => { mesh.position.set(...newPosition) },
     update

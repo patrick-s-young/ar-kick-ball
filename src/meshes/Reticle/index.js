@@ -23,17 +23,24 @@ export function Reticle() {
     mesh.matrix.fromArray(matrixArray);
   }
 
+  const setPosition = (positionVec3) => {
+    mesh.matrix.setPosition(positionVec3);
+  }
+
   const updateMixer = (deltaSeconds) => {
     if (mesh.visible) anim.mixer?.update(deltaSeconds);
   }
 
   return {
     getMesh: () => { return mesh },
+    get mesh() { return mesh },
     set visible(isVisible) { mesh.visible = isVisible },
     get visible() { return mesh.visible },
     get matrix() { return mesh.matrix },
     get anim() { return anim },
+    get position() { return mesh.position },
     updateMixer,
-    setMatrixFromArray
+    setMatrixFromArray,
+    setPosition
   }
 }

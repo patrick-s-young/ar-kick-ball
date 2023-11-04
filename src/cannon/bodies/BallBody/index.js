@@ -2,10 +2,8 @@ import * as CANNON from 'cannon-es';
 import { COLLISION_GROUPS, COLLISION_FILTER_MASKS } from '@cannon/collisions';
 import { ballMaterial } from '@cannon/materials';
 
-export const BallBody = ({
-  world
-}) => {
-  const startPosition = [.2, .2, 0];
+export const BallBody = ({ world }) => {
+  const startPosition = [0, 0.2, 0];
   const radius = .05;
   const body = new CANNON.Body({ 
     mass: .5, 
@@ -16,9 +14,19 @@ export const BallBody = ({
     collisionFilterMask: COLLISION_FILTER_MASKS.BALL
   });
 
-  world.addBody(body);
+  const addToWorld = () => {
+    world.addBody(body);
+  }
+
+  const setPosition = (positionArr) => {
+    console.log('positionArr:', positionArr)
+    body.position.set(...positionArr)
+  }
 
   return {
-    get body() { return body }
+    get body() { return body },
+    addToWorld,
+    setPosition,
+    get position() { return body.position }
   }
 }
