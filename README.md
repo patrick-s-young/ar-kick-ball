@@ -1,5 +1,5 @@
 # ar-kick-ball
-AR Kick Ball - WebXR ARCore-enabled game for mobile browser-based augmented reality.
+AR Kick Ball - WebXR ARCore-enabled game for mobile browser.
 
 ## Status Update:
  Having to switch to my Google Pixel every time I want to test an update is a cumbersome process. So I am working on a 'emulation mode' that allows for faster iteration.
