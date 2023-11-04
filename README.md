@@ -2,7 +2,7 @@
 AR Kick Ball - WebXR ARCore-enabled game for mobile browser.
 
 ## Status Update:
- Having to switch to my Google Pixel every time I want to test an update is a cumbersome process. So I am working on a 'emulation mode' that allows for faster iteration.
+ Having to switch to my Google Pixel every time I want to test an update is a cumbersome process, so I am working on a 'emulation mode' that allows for faster iteration.
 
 [https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/fc09dadb-8e27-4741-9691-b2d438fb7600](https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/7af9d692-98da-4129-8a50-611520651758)
 
