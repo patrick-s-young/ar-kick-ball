@@ -24,13 +24,15 @@ export function DebugFloor({
   mesh.rotateX(-Math.PI / 2);
   mesh.receiveShadow = true;
 
-  const setBody = (_body) => {
-    body = _body;
+  const setPosition = ({x, y, z}) => {
+    mesh.position.x = x;
+    mesh.position.z = z;
   }
 
   return {
     get mesh() { return mesh },
-    setBody
+    set visible(isVisible) { mesh.visible = isVisible },
+    setPosition
   }
 }
 

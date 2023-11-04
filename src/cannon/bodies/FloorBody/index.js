@@ -13,7 +13,7 @@ export const FloorBody = ({
   const halfExtents = new CANNON.Vec3(x * 0.5, y * 0.5, z * 0.5);
   const quaternion = new CANNON.Quaternion();
   quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), startRotationX);
-  const boxBody = new CANNON.Body({ 
+  const body = new CANNON.Body({ 
     mass: 0, 
     shape: new CANNON.Box(halfExtents),
     position: new CANNON.Vec3(...startPosition),
@@ -23,11 +23,16 @@ export const FloorBody = ({
   });
 
   const addToWorld = () => {
-    world.addBody(boxBody);
+    world.addBody(body);
+  }
+
+  const setPosition = (positionArr) => {
+    body.position.set(...positionArr)
   }
 
   return {
-    get body() { return boxBody },
-    addToWorld
+    get body() { return body },
+    addToWorld,
+    setPosition
   }
 }
