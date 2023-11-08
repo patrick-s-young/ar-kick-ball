@@ -80,6 +80,7 @@ export function Character({
   }
 
   const setPosition = ({x, y, z}) => {
+    console.log('Character > setPostion: characterBody:', characterBody)
     mesh.position.x = x;
     mesh.position.y = y;
     mesh.position.z = z;

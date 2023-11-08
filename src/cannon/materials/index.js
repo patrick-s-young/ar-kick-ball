@@ -11,7 +11,7 @@ export const initContactMaterials = ({ world }) => {
     floorMaterial, 
     ballMaterial, {
     friction: 0.1,
-    restitution: 0.2
+    restitution: 0.7
     }
   );
   world.addContactMaterial(ballAndFloor);

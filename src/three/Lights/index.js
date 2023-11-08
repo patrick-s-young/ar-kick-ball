@@ -8,7 +8,7 @@ export function Lights() {
   directional.position.set( 0.2, 1, 1);
 
   const point = new THREE.PointLight(0xffffff, 2);
-  point.position.set(0, 2, 0);
+  point.position.set(0, 2, -1);
   point.castShadow = true;
   point.shadow.mapSize.width = 2048;
   point.shadow.mapSize.height = 2048;

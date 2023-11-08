@@ -1,5 +1,5 @@
 export { Ball } from './Ball';
-export { Floor } from './Floor';
+export { FloorShadow } from './FloorShadow';
 export { Reticle } from './Reticle';
 export { SoccerBall } from './SoccerBall';
 export { SOLDIER_CONFIG } from './Soldier/soldier.config';
