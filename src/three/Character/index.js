@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
 import { Animation } from '../Animation';
@@ -28,7 +27,7 @@ export function Character({
   // SPEED
   let speed = 0;
   // BODY
-  let body;
+  let characterBody;
 
 
   gltfLoader.load(assetPath, (gltf) => {
@@ -59,10 +58,10 @@ export function Character({
     mesh.position.x += x;
     mesh.position.z -= y;
 
-    if (body === undefined) return;
-    body.position.x += x;
-    body.position.z -= y;
-    body.quaternion.copy(rotation.quaternion)
+    if (characterBody === undefined) return;
+    characterBody.body.position.x += x;
+    characterBody.body.position.z -= y;
+    characterBody.body.quaternion.copy(rotation.quaternion)
   }
 
   const update = (deltaSeconds) => {
@@ -76,15 +75,15 @@ export function Character({
 
   const getBoundingBox = () => new THREE.Box3().setFromObject(mesh);
 
-  const setBody = (_body) => {
-    body = _body;
+  const setBody = (_characterBody) => {
+    characterBody = _characterBody;
   }
 
   const setPosition = ({x, y, z}) => {
     mesh.position.x = x;
+    mesh.position.y = y;
     mesh.position.z = z;
-    body.position.x = x;
-    body.position.z = z;
+    characterBody.setPosition({x, y, z});
   }
 
   return {

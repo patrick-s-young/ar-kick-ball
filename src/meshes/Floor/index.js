@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 
 export function Floor() {
-  const materialBasic = new THREE.MeshBasicMaterial({
-    color: 0x00ff00
-  });
-
   const materialShadow = new THREE.ShadowMaterial();
   materialShadow.opacity = 0.3;
 
@@ -21,10 +17,16 @@ export function Floor() {
     mesh.visible = true;;
   }
 
+  const setPosition = ({x, y, z}) => {
+    mesh.position.x = x;
+    mesh.position.z = z;
+  }
+
   return {
     get mesh() { return mesh },
     set position(newPosition) { mesh.position.set(...newPosition) },
     set visible(isVisible) { mesh.visible = isVisible },
-    setMatrixFromArray
+    setMatrixFromArray,
+    setPosition
   }
 }

@@ -4,7 +4,7 @@ import { ballMaterial } from '@cannon/materials';
 
 export const BallBody = ({ world }) => {
   const startPosition = [0, 0.2, 0];
-  const radius = .05;
+  const radius = .04;
   const body = new CANNON.Body({ 
     mass: .5, 
     shape: new CANNON.Sphere(radius),
@@ -25,6 +25,7 @@ export const BallBody = ({ world }) => {
   return {
     get body() { return body },
     get position() { return body.position },
+    get quaternion() { return body.quaternion },
     addToWorld,
     setPosition
   }
