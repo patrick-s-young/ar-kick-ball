@@ -4,5 +4,5 @@ export const SOLDIER_CONFIG = ({ isDebugMode = false }) => ({
   meshScaler: .125,
   speedScaler: .25,
   defaultClipAction: 'Idle',
-  turningIncrement: .05
+  turningIncrement: .075
 });

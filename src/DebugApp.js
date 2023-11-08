@@ -12,7 +12,7 @@ import {
   initKeyEvents } from '@debug';
 // meshes
 import {
-  Floor,
+  FloorShadow,
   Reticle,
   SoccerBall,
   SOLDIER_CONFIG } from '@meshes';
@@ -49,13 +49,13 @@ export const DebugApp = () => {
   // meshes
   const meshes = {
     soldier: Character({...SOLDIER_CONFIG({ isDebugMode: true }), onLoadCallback: (mesh) => onSoldierMeshLoaded(mesh)}),
-    floor: new Floor(),
+    floorShadow: new FloorShadow(),
     reticle: Reticle(),
     debugFloor: new DebugFloor({})
   }
   three.scene.add([
     meshes.soldier.mesh,
-    meshes.floor.mesh,
+    meshes.floorShadow.mesh,
     meshes.debugFloor.mesh,
     meshes.reticle.mesh
   ]);
@@ -107,10 +107,6 @@ export const DebugApp = () => {
     const { x, y, z } = new THREE.Vector3().setFromMatrixPosition(meshes.reticle.mesh.matrix);
     meshes.reticle.visible = false;
     meshAnimationUpdate = meshAnimationUpdate.filter(item => item.name === 'reticle');
-    // ball
-    // meshes.ball = new Ball({ scene: three.scene, world });
-    // meshes.ball.setPosition([x + .2 , y + .3, z]);
-    // meshAnimationUpdate.push({ name: 'ball', update: (dt) => meshes.ball.update(dt)});
     // soccer ball
     meshes.soccerBall = SoccerBall({ 
       assetPath: '/models/soccer_ball.glb',
@@ -120,11 +116,14 @@ export const DebugApp = () => {
     });
     meshes.soccerBall.setPosition([x + .2 , y + .3, z]);
     meshAnimationUpdate.push({ name: 'soccerBall', update: (dt) => meshes.soccerBall.update(dt)});
-
-    // floor
-    meshes.debugFloor.setPosition({ x, y, z});
+    // floorBody
     cannon.floorBody.setPosition([x, y -.05, z]);
     cannon.floorBody.addToWorld();
+    // floorShadow
+    meshes.floorShadow.setPosition({ x, y, z});
+    meshes.floorShadow.visible = true;
+    // floor emulation
+    meshes.debugFloor.setPosition({ x, y: y - 0.01, z});
     // soldier
     cannon.characterBody = CharacterBody({ world });
     meshes.soldier.setBody(cannon.characterBody);
@@ -145,6 +144,7 @@ export const DebugApp = () => {
   function animate() {
     const dt = animationClock.getDelta();
     meshAnimationUpdate.forEach(item => item.update(dt));
+    meshes.floorShadow.position = meshes.soldier.position;
     three.renderer.render( three.scene.self, three.camera.self );
     requestAnimationFrame( animate );
   }

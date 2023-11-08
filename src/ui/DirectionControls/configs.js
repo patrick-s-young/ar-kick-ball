@@ -5,7 +5,7 @@ export const buttonContainerStyles = {
     display: 'flex',
     position: 'relative',
     marginLeft: `${Math.trunc(buttonSize * .5)}px`,
-    marginTop: `${innerHeight - buttonSize * 2.9}px`,
+    marginTop: `${innerHeight - buttonSize * 3.0}px`,
     width: `${innerWidth}px`,
     height: `${innerWidth}px`
   }

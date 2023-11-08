@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export function Floor() {
+export function FloorShadow() {
   const materialShadow = new THREE.ShadowMaterial();
   materialShadow.opacity = 0.3;
 
@@ -19,6 +19,7 @@ export function Floor() {
 
   const setPosition = ({x, y, z}) => {
     mesh.position.x = x;
+    mesh.position.y = y;
     mesh.position.z = z;
   }
 

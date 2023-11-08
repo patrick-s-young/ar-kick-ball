@@ -7,9 +7,9 @@ import {
   initContactMaterials } from '@cannon'; 
 // meshes
 import {
-  Ball,
-  Floor,
+  FloorShadow,
   Reticle,
+  SoccerBall,
   SOLDIER_CONFIG } from '@meshes';
 // three
 import * as THREE from 'three';
@@ -50,12 +50,12 @@ export const App = () => {
   // meshes
   const meshes = {
     soldier: Character({...SOLDIER_CONFIG({ isDebugMode: false }), onLoadCallback: initDirectionMenu }),
-    floor: new Floor(),
+    floorShadow: new FloorShadow(),
     reticle: Reticle(),
   }
   three.scene.add([
     meshes.soldier.mesh,
-    meshes.floor.mesh,
+    meshes.floorShadow.mesh,
     meshes.reticle.mesh
   ]);
 
@@ -113,22 +113,29 @@ export const App = () => {
       const { x, y, z } = new THREE.Vector3().setFromMatrixPosition(meshes.reticle.mesh.matrix);
       meshes.reticle.visible = false;
       meshAnimationUpdate = meshAnimationUpdate.filter(item => item.name === 'reticle');
-      // ball
-      meshes.ball = new Ball({ scene: three.scene, world });
-      meshes.ball.setPosition([x + .2 , y + .3, z]);
-      meshAnimationUpdate.push({ name: 'ball', update: (dt) => meshes.ball.update(dt)});
+      // soccer ball
+      meshes.soccerBall = SoccerBall({ 
+        assetPath: '/models/soccer_ball.glb',
+        onLoadCallback: () => {},
+        scene: three.scene,
+        world: cannon.world
+      });
+      meshes.soccerBall.setPosition([x + .2 , y + .3, z]);
+      meshAnimationUpdate.push({ name: 'soccerBall', update: (dt) => meshes.soccerBall.update(dt)});
+    
       // floorBody
       cannon.floorBody.setPosition([x, y -.05, z]);
       cannon.floorBody.addToWorld();
+      // floorShadow
+      meshes.floorShadow.setPosition({ x, y, z});
+      meshes.floorShadow.visible = true;
       // soldier
       cannon.characterBody = CharacterBody({ world });
-      meshes.soldier.setBody(cannon.characterBody.body);
+      meshes.soldier.setBody(cannon.characterBody);
       meshes.soldier.setPosition({ x, y, z})
       meshes.soldier.setVisible(true);
       meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });
-      // floor for character shadow
-      meshes.floor.setPosition({ x, y, z});
-      meshes.floor.visible = true;
+
       // disable hit test & hide reticle
       hitTestActive = false;
       meshes.reticle.visible = false; 
@@ -157,7 +164,7 @@ export const App = () => {
           meshes.reticle.visible = false;
         }
       }
-    meshes.floor.position = meshes.soldier.position;
+    meshes.floorShadow.position = meshes.soldier.position;
     meshAnimationUpdate.forEach(item => item.update(dt));
     three.renderer.render(three.scene.self, three.camera.self);
   }

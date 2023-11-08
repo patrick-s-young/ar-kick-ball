@@ -26,6 +26,7 @@ export function DebugFloor({
 
   const setPosition = ({x, y, z}) => {
     mesh.position.x = x;
+    mesh.position.y = y;
     mesh.position.z = z;
   }
 
