@@ -1,13 +1,13 @@
 // cannon
-// import * as CANNON from 'cannon-es';
-// import CannonDebugger from 'cannon-es-debugger';
-// import {
-//   BallBody,
-//   FloorBody,
-//   initContactMaterials } from '@cannon'; 
+import * as CANNON from 'cannon-es';
+import CannonDebugger from 'cannon-es-debugger';
+import {
+  CharacterBody,
+  FloorBody,
+  initContactMaterials } from '@cannon'; 
 // meshes
 import {
-  //Ball,
+  Ball,
   Floor,
   Reticle,
   SOLDIER_CONFIG } from '@meshes';
@@ -34,19 +34,42 @@ import './style.css';
 //////////////////
 // BEGIN COMPONENT
 export const App = () => {
-  // SCENE SETUP
-  const scene = Scene();
-  const camera = Camera();
-  const lights = Lights();
-  scene.add(lights.getLights());
-  // GLTF
-  const reticle = Reticle();
-  scene.add(reticle.getMesh());
-  const soldier = Character({...SOLDIER_CONFIG({ isDebugMode: false }), onLoadCallback: initDirectionMenu });
-  scene.add(soldier.mesh);
-  // Geometry
-  const floor = new Floor();
-  scene.add(floor.mesh);
+  // animation loop
+  let meshAnimationUpdate = [];
+  const animationClock = new THREE.Clock();
+
+  // three
+  const three = {
+    scene: Scene(),
+    camera: Camera(),
+    lights: Lights(),
+    renderer: new Renderer()
+  }
+  three.scene.add(three.lights.getLights());
+
+  // meshes
+  const meshes = {
+    soldier: Character({...SOLDIER_CONFIG({ isDebugMode: false }), onLoadCallback: initDirectionMenu }),
+    floor: new Floor(),
+    reticle: Reticle(),
+  }
+  three.scene.add([
+    meshes.soldier.mesh,
+    meshes.floor.mesh,
+    meshes.reticle.mesh
+  ]);
+
+  // cannon
+  const world = new CANNON.World();
+  world.gravity.set(0, -10, 0);
+  world.broadphase = new CANNON.NaiveBroadphase();
+  initContactMaterials({ world });
+  const cannon = {
+    world,
+    floorBody: FloorBody({ world }),
+    debugger: new CannonDebugger(three.scene.self, world)
+  }
+
   // UI
   const uiParent = document.createElement('div');
   uiParent.style.position = 'absolute';
@@ -54,17 +77,17 @@ export const App = () => {
   document.body.appendChild(uiParent);
   const arButton = ARButton();
   let directionControls;
+
   function initDirectionMenu() {
     directionControls = DirectionControls({
       uiParent,
-      setDirection: soldier.setDirection,
-      setClipAction: soldier.setClipAction,
-      camera
+      setDirection: meshes.soldier.setDirection,
+      setClipAction: meshes.soldier.setClipAction,
+      camera: three.camera
     }) 
   }
-  // RENDERER
-  const renderer = Renderer();
-  const clock = new THREE.Clock();
+
+
   // XR MANAGER
   const xrManager = XRManager({ startButton: arButton, onReady });
   let hitTestManager;
@@ -75,50 +98,68 @@ export const App = () => {
   // XR SESSION READY
   async function onReady () {
     hitTestManager = HitTestManager({ xrSession: xrManager.xrSession });
-    xrManager.setOnSelectCallback(onSelectCallback)
-    renderer.setReferenceSpaceType( 'local' );
-    renderer.setSession( xrManager.xrSession  );
-    renderer.setAnimationLoop(animationLoopCallback);
+    xrManager.setOnSelectCallback(onSelectCallback);
+    meshAnimationUpdate.push({ name: 'reticle', update: (dt) => meshes.reticle.updateMixer(dt)});
+    three.renderer.setReferenceSpaceType( 'local' );
+    three.renderer.setSession( xrManager.xrSession  );
+    three.renderer.setAnimationLoop(animationLoopCallback);
   }
 
   // ON SCREEN TAP
   const onSelectCallback = (ev) => {
     if (hitTestActive === false) return;
-    if (reticle.visible) {
-      const workingPositionVec3 = new THREE.Vector3();
-      workingPositionVec3.setFromMatrixPosition(reticle.matrix);
-      // set position & show character and shadow
-      soldier.position = workingPositionVec3;
-      soldier.visible = true;
-      floor.position = workingPositionVec3;
-      floor.visible = true;
+    if (meshes.reticle.visible) {
+      // reticle
+      const { x, y, z } = new THREE.Vector3().setFromMatrixPosition(meshes.reticle.mesh.matrix);
+      meshes.reticle.visible = false;
+      meshAnimationUpdate = meshAnimationUpdate.filter(item => item.name === 'reticle');
+      // ball
+      meshes.ball = new Ball({ scene: three.scene, world });
+      meshes.ball.setPosition([x + .2 , y + .3, z]);
+      meshAnimationUpdate.push({ name: 'ball', update: (dt) => meshes.ball.update(dt)});
+      // floorBody
+      cannon.floorBody.setPosition([x, y -.05, z]);
+      cannon.floorBody.addToWorld();
+      // soldier
+      cannon.characterBody = CharacterBody({ world });
+      meshes.soldier.setBody(cannon.characterBody.body);
+      meshes.soldier.setPosition({ x, y, z})
+      meshes.soldier.setVisible(true);
+      meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });
+      // floor for character shadow
+      meshes.floor.setPosition({ x, y, z});
+      meshes.floor.visible = true;
       // disable hit test & hide reticle
       hitTestActive = false;
-      reticle.visible = false; 
+      meshes.reticle.visible = false; 
       // move to UI component
       uiParent.style.visibility = 'visible';
       directionControls?.enableTouch();
+      // cannon
+      meshAnimationUpdate.push(
+      { name: 'cannon', update: (dt) => cannon.world.step(dt)},
+      //{ name: 'cannonDebugger', update: () => cannon.debugger.update()}
+    );
     }
   }
 
   // RENDER LOOP
   function animationLoopCallback(timestamp, frame) {
-    const dt = clock.getDelta();
+    const dt = animationClock.getDelta();
       let hitPoseTransformMatrix = [];
       if ( frame && hitTestActive === true) {
         if ( hitTestManager.hitTestSourceRequested === false ) hitTestManager.requestHitTestSource();
         hitPoseTransformMatrix = hitTestManager.hitTestSource ? hitTestManager.getHitTestResults(frame) : [];
         if (hitPoseTransformMatrix.length > 0) {
-          reticle.visible = true;
-          reticle.setMatrixFromArray(hitPoseTransformMatrix);
+          meshes.reticle.visible = true;
+          meshes.reticle.setMatrixFromArray(hitPoseTransformMatrix);
         } else {
-          reticle.visible = false;
+          meshes.reticle.visible = false;
         }
       }
-    reticle.updateMixer(dt);
-    soldier.update(dt);
-    floor.position = soldier.position;
-    renderer.render(scene.self, camera.self);
+    meshes.floor.position = meshes.soldier.position;
+    meshAnimationUpdate.forEach(item => item.update(dt));
+    three.renderer.render(three.scene.self, three.camera.self);
   }
 
   return null;

@@ -3,7 +3,6 @@ import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
   CharacterBody,
-  BallBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // debug
@@ -13,9 +12,9 @@ import {
   initKeyEvents } from '@debug';
 // meshes
 import {
-  Ball,
   Floor,
   Reticle,
+  SoccerBall,
   SOLDIER_CONFIG } from '@meshes';
 // three
 import * as THREE from 'three';
@@ -69,7 +68,6 @@ export const DebugApp = () => {
   const cannon = {
     world,
     floorBody: FloorBody({ world }),
-    ballBody: BallBody({ world }),
     debugger: new CannonDebugger(three.scene.self, world)
   }
 
@@ -78,6 +76,7 @@ export const DebugApp = () => {
     raycaster: new THREE.Raycaster(),
     pointer: new THREE.Vector2()
   }
+
 
   // start reticle hitTest 
   function onSoldierMeshLoaded (_mesh) {
@@ -109,16 +108,26 @@ export const DebugApp = () => {
     meshes.reticle.visible = false;
     meshAnimationUpdate = meshAnimationUpdate.filter(item => item.name === 'reticle');
     // ball
-    meshes.ball = new Ball({ scene: three.scene, world });
-    meshes.ball.setPosition([x + .2 , y + .3, z]);
-    meshAnimationUpdate.push({ name: 'ball', update: (dt) => meshes.ball.update(dt)});
+    // meshes.ball = new Ball({ scene: three.scene, world });
+    // meshes.ball.setPosition([x + .2 , y + .3, z]);
+    // meshAnimationUpdate.push({ name: 'ball', update: (dt) => meshes.ball.update(dt)});
+    // soccer ball
+    meshes.soccerBall = SoccerBall({ 
+      assetPath: '/models/soccer_ball.glb',
+      onLoadCallback: () => {},
+      scene: three.scene,
+      world: cannon.world
+    });
+    meshes.soccerBall.setPosition([x + .2 , y + .3, z]);
+    meshAnimationUpdate.push({ name: 'soccerBall', update: (dt) => meshes.soccerBall.update(dt)});
+
     // floor
     meshes.debugFloor.setPosition({ x, y, z});
     cannon.floorBody.setPosition([x, y -.05, z]);
     cannon.floorBody.addToWorld();
     // soldier
     cannon.characterBody = CharacterBody({ world });
-    meshes.soldier.setBody(cannon.characterBody.body);
+    meshes.soldier.setBody(cannon.characterBody);
     meshes.soldier.setPosition({ x, y, z})
     meshes.soldier.setVisible(true);
     meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });

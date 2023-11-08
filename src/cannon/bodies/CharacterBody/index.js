@@ -8,13 +8,13 @@ export const CharacterBody = ({
 }) => {
   // hard-code size for now...
   const size = {
-    x: 0.07,
-    y: 0.22,
-    z: 0.10
+    width: 0.07,
+    height: 0.22,
+    depth: 0.10
   }
-  const { x, y, z } = size;
-  const startPosition = [0, y * 0.5, 0];
-  const halfExtents = new CANNON.Vec3(x * 0.5, y * 0.5, z * 0.5);
+
+  const startPosition = [0, size.height * 0.5, 0];
+  const halfExtents = new CANNON.Vec3(size.width * 0.5, size.height * 0.5, size.depth * 0.5);
   const body = new CANNON.Body({ 
     mass: 0, 
     shape: new CANNON.Box(halfExtents),
@@ -25,8 +25,14 @@ export const CharacterBody = ({
 
   world.addBody(body);
 
+  const setPosition = ({ x, y, z }) => {
+    body.position.x = x;
+    body.position.y = y + size.height * 0.5;
+    body.position.z = z;
+  }
 
   return {
-    get body() { return body }
+    get body() { return body },
+    setPosition
   }
 }
