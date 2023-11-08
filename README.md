@@ -2,9 +2,13 @@
 AR Kick Ball - WebXR ARCore-enabled game for mobile browser.
 
 ## Status Update:
- Having to switch to my Google Pixel every time I want to test an update is a cumbersome process, so I am working on a 'emulation mode' that allows for faster iteration.
+Physics (courtesy of [cannon-es](https://www.npmjs.com/package/cannon-es)) added to soccer ball, solider, and floor.
 
-[https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/fc09dadb-8e27-4741-9691-b2d438fb7600](https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/7af9d692-98da-4129-8a50-611520651758)
+
+
+https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/637e16c9-405d-4b3e-814f-096daffa86f7
+
+
 
 
 Project created with [webxr-arcore-boilerplate](https://github.com/patrick-s-young/webxr-arcore-boilerplate)
@@ -31,6 +35,7 @@ See Google's [ARCore supported devices](https://developers.google.com/ar/devices
 * [Three.js](https://www.npmjs.com/package/three) - An easy to use, lightweight, cross-browser, general purpose 3D library.
 * [webpack](https://webpack.js.org/) - static module builder.
 * [maximo](https://www.mixamo.com/) - 3D characters, skeletal rigs, and animations.
+* [turbosquid](https://www.turbosquid.com/) - soccer ball.
 
 ## Authors
 
