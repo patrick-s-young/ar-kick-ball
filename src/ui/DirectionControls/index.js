@@ -1,4 +1,5 @@
-import { buttonContainerStyles, buttonStyles, buttonRows } from "./configs";
+import { buttonRows } from "./configs";
+import './styles.css';
 
 export const DirectionControls = ({ 
   uiParent, 
@@ -7,22 +8,29 @@ export const DirectionControls = ({
   camera }) => {
 // onTouchEnd delay before transition from 'Walk' to 'Idle'
   let timeoutId;
+
 // Button container
   const buttonContainer = document.createElement('div');
-  Object.entries(buttonContainerStyles).forEach(([key, value]) => buttonContainer.style[key] = value);
+  buttonContainer.className = 'ButtonContainer';
   uiParent.appendChild(buttonContainer);
+// Button layout
+  const buttonLayout = document.createElement('div');
+  buttonLayout.className='ButtonLayout'
+  //Object.entries(buttonContainerStyles).forEach(([key, value]) => buttonContainer.style[key] = value);
+  buttonContainer.appendChild(buttonLayout);
 
 // Button rows
   buttonRows.forEach(items => {
     const rowContainer = document.createElement('div');
     items.forEach(item => rowContainer.appendChild(navButton({ label: item })))
-    buttonContainer.appendChild(rowContainer);
+    buttonLayout.appendChild(rowContainer);
   });
 
 // Button
   function navButton ({ label }) {
     const button = document.createElement('div');
-    Object.entries(buttonStyles).forEach(([key, value]) => button.style[key] = value);
+    button.className='DirectionButton';
+    //Object.entries(buttonStyles).forEach(([key, value]) => button.style[key] = value);
     button.style.backgroundColor = label === 'spacer' ? undefined : 'orange';
     button.innerHTML = label === 'spacer' ? '&nbsp;' : `<img src='/images/arrow_${label}.png' />`;
     button.id = label;
