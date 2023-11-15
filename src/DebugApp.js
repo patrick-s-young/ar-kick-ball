@@ -3,6 +3,7 @@ import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
   CharacterBody,
+  FootBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // debug
@@ -87,6 +88,12 @@ export const DebugApp = () => {
     );
     three.renderer.domElement.addEventListener('pointermove', onPointerMove);
     three.renderer.domElement.addEventListener('click', onClick);
+
+    console.log('rightFootBone:', meshes.soldier.rightFootBone);
+    const boneWorldPos = new THREE.Vector3()
+    meshes.soldier.rightFootBone.getWorldPosition(boneWorldPos);
+    console.log('rightFootBone worldPosition:', boneWorldPos)
+
   }
 
 
@@ -125,8 +132,11 @@ export const DebugApp = () => {
     // floor emulation
     meshes.debugFloor.setPosition({ x, y: y - 0.01, z});
     // soldier
-    cannon.characterBody = CharacterBody({ world });
-    meshes.soldier.setBody(cannon.characterBody);
+    //cannon.characterBody = CharacterBody({ world });
+    cannon.rightFootBody = FootBody({ world });
+    cannon.leftFootBody = FootBody({ world });
+   // meshes.soldier.setBody(cannon.characterBody);
+    meshes.soldier.setFeetBodies({ rightFoot: cannon.rightFootBody, leftFoot: cannon.leftFootBody });
     meshes.soldier.setPosition({ x, y, z})
     meshes.soldier.setVisible(true);
     meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });
