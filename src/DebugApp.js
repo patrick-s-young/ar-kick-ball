@@ -2,8 +2,7 @@
 import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
-  CharacterBody,
-  FootBody,
+  BoxBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // debug
@@ -15,8 +14,7 @@ import {
 import {
   FloorShadow,
   Reticle,
-  SoccerBall,
-  SOLDIER_CONFIG } from '@meshes';
+  SoccerBall } from '@meshes';
 // three
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -25,6 +23,8 @@ import {
   Character,
   Lights,
   Scene } from '@three';
+// configs
+import { SOLDIER } from './configs';
 // styles
 import './style.css';
 
@@ -49,7 +49,10 @@ export const DebugApp = () => {
 
   // meshes
   const meshes = {
-    soldier: Character({...SOLDIER_CONFIG({ isDebugMode: true }), onLoadCallback: (mesh) => onSoldierMeshLoaded(mesh)}),
+    soldier: Character({
+      ...SOLDIER.getMeshConfigs({ isDebugMode: true }), 
+      onLoadCallback: (mesh) => onSoldierMeshLoaded(mesh)
+    }),
     floorShadow: new FloorShadow(),
     reticle: Reticle(),
     debugFloor: new DebugFloor({})
@@ -88,12 +91,6 @@ export const DebugApp = () => {
     );
     three.renderer.domElement.addEventListener('pointermove', onPointerMove);
     three.renderer.domElement.addEventListener('click', onClick);
-
-    //console.log('rightFootBone:', meshes.soldier.rightFootBone);
-   // const boneWorldPos = new THREE.Vector3()
-  //  meshes.soldier.rightFootBone.getWorldPosition(boneWorldPos);
-   // console.log('rightFootBone worldPosition:', boneWorldPos)
-
   }
 
 
@@ -132,17 +129,13 @@ export const DebugApp = () => {
     // floor emulation
     meshes.debugFloor.setPosition({ x, y: y - 0.01, z});
     // soldier
-    cannon.rightFootBody = FootBody({ world });
-    cannon.leftFootBody = FootBody({ world });
     meshes.soldier.addBoneBodyAnimation({
-      boneName: 'mixamorigRightFoot',
-      body: cannon.rightFootBody.body,
-      bodyOffset: [-0.002, 0.01, 0.003]
+      ...SOLDIER.cannonBodies.rightFoot.bone,
+      body: BoxBody({ ...SOLDIER.cannonBodies.rightFoot.boxBody, world })
     });
     meshes.soldier.addBoneBodyAnimation({
-      boneName: 'mixamorigLeftFoot',
-      body: cannon.leftFootBody.body,
-      bodyOffset: [0.002, 0.01, 0.003]
+      ...SOLDIER.cannonBodies.leftFoot.bone,
+      body: BoxBody({ ...SOLDIER.cannonBodies.leftFoot.boxBody, world })
     });
     meshes.soldier.setPosition({ x, y, z})
     meshes.soldier.setVisible(true);
