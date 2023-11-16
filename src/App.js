@@ -131,11 +131,18 @@ export const App = () => {
       meshes.floorShadow.setPosition({ x, y, z});
       meshes.floorShadow.visible = true;
       // soldier
-     // cannon.characterBody = CharacterBody({ world });
       cannon.rightFootBody = FootBody({ world });
       cannon.leftFootBody = FootBody({ world });
-    //  meshes.soldier.setBody(cannon.characterBody);
-      meshes.soldier.setFeetBodies({ rightFoot: cannon.rightFootBody, leftFoot: cannon.leftFootBody });
+      meshes.soldier.addBoneBodyAnimation({
+        boneName: 'mixamorigRightFoot',
+        body: cannon.rightFootBody.body,
+        bodyOffset: [-0.002, 0.01, 0.003]
+      });
+      meshes.soldier.addBoneBodyAnimation({
+        boneName: 'mixamorigLeftFoot',
+        body: cannon.leftFootBody.body,
+        bodyOffset: [0.002, 0.01, 0.003]
+      });
       meshes.soldier.setPosition({ x, y, z})
       meshes.soldier.setVisible(true);
       meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });
