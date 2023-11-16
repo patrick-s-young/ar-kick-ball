@@ -2,16 +2,14 @@
 import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
-  CharacterBody,
-  FootBody,
+  BoxBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // meshes
 import {
   FloorShadow,
   Reticle,
-  SoccerBall,
-  SOLDIER_CONFIG } from '@meshes';
+  SoccerBall } from '@meshes';
 // three
 import * as THREE from 'three';
 import {
@@ -20,6 +18,8 @@ import {
   Lights,
   Renderer,
   Scene } from '@three';
+// configs
+import { SOLDIER } from './configs';
 // ui
 import {
   ARButton,
@@ -50,7 +50,10 @@ export const App = () => {
 
   // meshes
   const meshes = {
-    soldier: Character({...SOLDIER_CONFIG({ isDebugMode: false }), onLoadCallback: initDirectionMenu }),
+    soldier: Character({
+      ...SOLDIER.getMeshConfigs({ isDebugMode: true }), 
+      onLoadCallback: initDirectionMenu
+    }),
     floorShadow: new FloorShadow(),
     reticle: Reticle(),
   }
@@ -131,17 +134,13 @@ export const App = () => {
       meshes.floorShadow.setPosition({ x, y, z});
       meshes.floorShadow.visible = true;
       // soldier
-      cannon.rightFootBody = FootBody({ world });
-      cannon.leftFootBody = FootBody({ world });
       meshes.soldier.addBoneBodyAnimation({
-        boneName: 'mixamorigRightFoot',
-        body: cannon.rightFootBody.body,
-        bodyOffset: [-0.002, 0.01, 0.003]
+        ...SOLDIER.cannonBodies.rightFoot.bone,
+        body: BoxBody({ ...SOLDIER.cannonBodies.rightFoot.boxBody, world })
       });
       meshes.soldier.addBoneBodyAnimation({
-        boneName: 'mixamorigLeftFoot',
-        body: cannon.leftFootBody.body,
-        bodyOffset: [0.002, 0.01, 0.003]
+        ...SOLDIER.cannonBodies.leftFoot.bone,
+        body: BoxBody({ ...SOLDIER.cannonBodies.leftFoot.boxBody, world })
       });
       meshes.soldier.setPosition({ x, y, z})
       meshes.soldier.setVisible(true);
