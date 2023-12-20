@@ -2,7 +2,7 @@ import { COLLISION_GROUPS } from '@cannon/collisions';
 import { characterMaterial } from '@cannon/materials';
 
 
-export const SOLDIER = {
+export const SOLDIER_CONFIG = {
   getMeshConfigs: ({ isDebugMode = false }) => ({
     assetPath: '/models/Soldier.glb',
     walkingSpeed: isDebugMode === true ? .015 : .028,
@@ -46,3 +46,5 @@ export const SOLDIER = {
     }
   }
 }
+
+// export const BALL = {

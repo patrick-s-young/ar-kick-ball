@@ -37,6 +37,7 @@ module.exports = (env) => ({
     },
     resolve: {
       alias: {
+        "@avatars": path.resolve(__dirname, "src/avatars"),
         "@cannon": path.resolve(__dirname, "src/cannon"),
         "@debug": path.resolve(__dirname, "src/debug"),
         "@math": path.resolve(__dirname, "src/math"),

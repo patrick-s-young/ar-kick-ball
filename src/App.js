@@ -2,7 +2,6 @@
 import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
-  BoxBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // meshes
@@ -14,12 +13,9 @@ import {
 import * as THREE from 'three';
 import {
   Camera,
-  Character,
   Lights,
   Renderer,
   Scene } from '@three';
-// configs
-import { SOLDIER } from './configs';
 // ui
 import {
   ARButton,
@@ -28,6 +24,8 @@ import {
 import {
   HitTestManager,
   XRManager } from '@webXR';
+import { 
+  Soldier } from '@avatars'; 
 // styles
 import './style.css';
 
@@ -48,21 +46,6 @@ export const App = () => {
   }
   three.scene.add(three.lights.getLights());
 
-  // meshes
-  const meshes = {
-    soldier: Character({
-      ...SOLDIER.getMeshConfigs({ isDebugMode: true }), 
-      onLoadCallback: initDirectionMenu
-    }),
-    floorShadow: new FloorShadow(),
-    reticle: Reticle(),
-  }
-  three.scene.add([
-    meshes.soldier.mesh,
-    meshes.floorShadow.mesh,
-    meshes.reticle.mesh
-  ]);
-
   // cannon
   const world = new CANNON.World();
   world.gravity.set(0, -10, 0);
@@ -73,6 +56,21 @@ export const App = () => {
     floorBody: FloorBody({ world }),
     debugger: new CannonDebugger(three.scene.self, world)
   }
+
+  // meshes
+  const meshes = {
+    soldier: Soldier ({
+      world: cannon.world,
+      onLoadCallback: initDirectionMenu
+    }),
+    floorShadow: new FloorShadow(),
+    reticle: Reticle(),
+  }
+  three.scene.add([
+    meshes.soldier.mesh,
+    meshes.floorShadow.mesh,
+    meshes.reticle.mesh
+  ]);
 
   // UI
   const uiParent = document.createElement('div');
@@ -134,14 +132,6 @@ export const App = () => {
       meshes.floorShadow.setPosition({ x, y, z});
       meshes.floorShadow.visible = true;
       // soldier
-      meshes.soldier.addBoneBodyAnimation({
-        ...SOLDIER.cannonBodies.rightFoot.bone,
-        body: BoxBody({ ...SOLDIER.cannonBodies.rightFoot.boxBody, world })
-      });
-      meshes.soldier.addBoneBodyAnimation({
-        ...SOLDIER.cannonBodies.leftFoot.bone,
-        body: BoxBody({ ...SOLDIER.cannonBodies.leftFoot.boxBody, world })
-      });
       meshes.soldier.setPosition({ x, y, z})
       meshes.soldier.setVisible(true);
       meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });

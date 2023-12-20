@@ -1,0 +1,1 @@
+export { Soldier } from './Soldier';
