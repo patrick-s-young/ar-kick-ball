@@ -22,6 +22,18 @@ cd ar-kick-ball
 yarn
 yarn start
 ```
+## Debug Mode
+
+Debug mode allows for faster experimentation/iteration in the browser. Code can then be propagated from DebugApp.js to App.js.
+
+```sh
+yarn debug
+```
+
+
+https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/8938c3ea-ab77-473f-9a78-f08fca8b9642
+
+
 ## Device Requirements
 See Google's [ARCore supported devices](https://developers.google.com/ar/devices).
 
