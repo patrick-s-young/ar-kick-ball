@@ -2,7 +2,6 @@
 import * as CANNON from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import {
-  BoxBody,
   FloorBody,
   initContactMaterials } from '@cannon'; 
 // debug
@@ -20,11 +19,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {
   Camera,
-  Character,
   Lights,
   Scene } from '@three';
-// configs
-import { SOLDIER } from './configs';
+import { 
+  Soldier } from '@avatars'; 
 // styles
 import './style.css';
 
@@ -47,10 +45,22 @@ export const DebugApp = () => {
   three.scene.add(three.lights.getLights());
   three.controls = new OrbitControls( three.camera.self, three.renderer.domElement );
 
+  // cannon
+  const world = new CANNON.World();
+  world.gravity.set(0, -10, 0);
+  world.broadphase = new CANNON.NaiveBroadphase();
+  initContactMaterials({ world });
+  const cannon = {
+    world,
+    floorBody: FloorBody({ world }),
+    debugger: new CannonDebugger(three.scene.self, world)
+  }
+
   // meshes
   const meshes = {
-    soldier: Character({
-      ...SOLDIER.getMeshConfigs({ isDebugMode: true }), 
+    soldier: Soldier ({
+      isDebugMode: true, 
+      world: cannon.world,
       onLoadCallback: (mesh) => onSoldierMeshLoaded(mesh)
     }),
     floorShadow: new FloorShadow(),
@@ -64,23 +74,11 @@ export const DebugApp = () => {
     meshes.reticle.mesh
   ]);
 
-  // cannon
-  const world = new CANNON.World();
-  world.gravity.set(0, -10, 0);
-  world.broadphase = new CANNON.NaiveBroadphase();
-  initContactMaterials({ world });
-  const cannon = {
-    world,
-    floorBody: FloorBody({ world }),
-    debugger: new CannonDebugger(three.scene.self, world)
-  }
-
   // hit test emulator
   const hitTest = {
     raycaster: new THREE.Raycaster(),
     pointer: new THREE.Vector2()
   }
-
 
   // start reticle hitTest 
   function onSoldierMeshLoaded (_mesh) {
@@ -92,7 +90,6 @@ export const DebugApp = () => {
     three.renderer.domElement.addEventListener('pointermove', onPointerMove);
     three.renderer.domElement.addEventListener('click', onClick);
   }
-
 
   // reticle hitTest emulator frame loop
   function onPointerMove(event) { 
@@ -129,14 +126,6 @@ export const DebugApp = () => {
     // floor emulation
     meshes.debugFloor.setPosition({ x, y: y - 0.01, z});
     // soldier
-    meshes.soldier.addBoneBodyAnimation({
-      ...SOLDIER.cannonBodies.rightFoot.bone,
-      body: BoxBody({ ...SOLDIER.cannonBodies.rightFoot.boxBody, world })
-    });
-    meshes.soldier.addBoneBodyAnimation({
-      ...SOLDIER.cannonBodies.leftFoot.bone,
-      body: BoxBody({ ...SOLDIER.cannonBodies.leftFoot.boxBody, world })
-    });
     meshes.soldier.setPosition({ x, y, z})
     meshes.soldier.setVisible(true);
     meshAnimationUpdate.push({ name: 'soldier', update: (dt) => meshes.soldier.update(dt) });
@@ -149,7 +138,6 @@ export const DebugApp = () => {
     );
   }
 
-  
   // animation loop
   function animate() {
     const dt = animationClock.getDelta();

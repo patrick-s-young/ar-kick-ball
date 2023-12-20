@@ -1,18 +1,24 @@
 import * as THREE from 'three';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 // Components
-import { Animation } from '../Animation';
-import { Rotation } from '../../math/Rotation';
+import { Animation } from '@three/Animation';
+import { Rotation } from '@math/Rotation';
+import { BoxBody } from '@cannon';
+import { SOLDIER_CONFIG } from './config';
 
 
-export function Character({
-  assetPath,
-  walkingSpeed,
-  meshScaler,
-  speedScaler,
-  defaultClipAction,
-  turningIncrement,
+export function Soldier ({
+  isDebugMode = false,
+  world,
   onLoadCallback }) {
+  const {
+    assetPath,
+    walkingSpeed,
+    meshScaler,
+    speedScaler,
+    defaultClipAction,
+    turningIncrement
+  } = SOLDIER_CONFIG.getMeshConfigs({ isDebugMode });
   // LOADER
   const gltfLoader = new GLTFLoader();
   // MODEL
@@ -39,6 +45,14 @@ export function Character({
     mesh.add(model);
     animation.init(gltf);
     animation.playClipAction(defaultClipAction);
+    addBoneBodyAnimation({
+      ...SOLDIER_CONFIG.cannonBodies.rightFoot.bone,
+      body: BoxBody({ ...SOLDIER_CONFIG.cannonBodies.rightFoot.boxBody, world })
+    });
+    addBoneBodyAnimation({
+      ...SOLDIER_CONFIG.cannonBodies.leftFoot.bone,
+      body: BoxBody({ ...SOLDIER_CONFIG.cannonBodies.leftFoot.boxBody, world })
+    });
     if (onLoadCallback !== undefined) onLoadCallback(mesh);
   });
 
