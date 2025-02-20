@@ -39,12 +39,13 @@ See Google's [ARCore supported devices](https://developers.google.com/ar/devices
 
 - Set your ARCore-supported Android device to developer mode.
 - Plug your device into your workstation via USB
-- On your workstation, open a Chrome broswe and set the location to: `chrome://inspect/#devices`
+- On your workstation, open a Chrome browser and set the location to: `chrome://inspect/#devices`
 - Find your device and click the link to launch the dev console
   
 ## Built With
 
 * [Three.js](https://www.npmjs.com/package/three) - An easy to use, lightweight, cross-browser, general purpose 3D library.
+* [cannon-es](https://www.npmjs.com/package/cannon-es) - Lightweight 3D physics engine.
 * [webpack](https://webpack.js.org/) - static module builder.
 * [maximo](https://www.mixamo.com/) - 3D characters, skeletal rigs, and animations.
 * [turbosquid](https://www.turbosquid.com/) - soccer ball.
