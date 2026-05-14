@@ -9,6 +9,41 @@ Physics (courtesy of [cannon-es](https://www.npmjs.com/package/cannon-es)) added
 https://github.com/patrick-s-young/ar-kick-ball/assets/42591798/637e16c9-405d-4b3e-814f-096daffa86f7
 
 
+## Logic Flowchart
+
+```mermaid
+flowchart TD
+    A[Load app] --> B[Initialize Three.js scene, camera, lights, and renderer]
+    B --> C[Initialize cannon-es world, floor body, and contact materials]
+    C --> D[Load soldier, reticle, and floor shadow]
+    D --> E[Create AR button and hidden direction controls]
+    E --> F{WebXR immersive-ar supported?}
+    F -- No --> G[Disable AR start]
+    F -- Yes --> H[Wait for AR button tap]
+    H --> I[Request immersive-ar session with hit-test]
+    I --> J[Create hit test manager and start XR animation loop]
+    J --> K{Hit test active?}
+    K -- Yes --> L[Request or read hit test results]
+    L --> M{Plane found?}
+    M -- Yes --> N[Show reticle at hit pose]
+    M -- No --> O[Hide reticle]
+    N --> P{Screen tapped?}
+    O --> K
+    P -- No --> K
+    P -- Yes --> Q[Place floor, shadow, soldier, and soccer ball]
+    Q --> R[Disable hit test and show direction controls]
+    R --> S[Enable soldier, ball, and physics updates]
+    S --> T{Direction button pressed?}
+    T -- Yes --> U[Set soldier direction from camera orientation and play Walk]
+    T -- No --> V[Keep current animation state]
+    U --> W[Update soldier pose and foot collision bodies]
+    V --> W
+    W --> X[Step cannon-es world and sync soccer ball mesh]
+    X --> Y[Render frame]
+    Y --> T
+```
+
+
 
 
 Project created with [webxr-arcore-boilerplate](https://github.com/patrick-s-young/webxr-arcore-boilerplate)
